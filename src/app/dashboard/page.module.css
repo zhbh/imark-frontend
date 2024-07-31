@@ -1,5 +1,5 @@
 .header {
-    display: 'flex';
+    display: flex;
     justify-content: space-between;
     background-color: white;
 }
@@ -18,4 +18,38 @@
     height: 40px;
 }
 
-.dropOverlay {}
+.innerSection {
+    height: calc(100vh - 64px);
+}
+
+.contentSection {
+    padding: 32px 0px 0px 0px;
+}
+
+.content {
+    margin: 0px 10px;
+    border-radius: 8px;
+    background-color: white;
+}
+
+.footer {
+    /* border-top-width: 1px;
+    border-color: #fafafa; */
+    padding: 0px 0px;
+}
+
+.footer .menu {
+    display: block;
+    float: right;
+    text-align: center;
+}
+
+.footer .menu .title {
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.footer .menu a {
+    font-size: 8px;
+    color: black;
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Children } from 'react';
+import React, { Children, useState } from 'react';
 import { DownOutlined } from '@ant-design/icons';
 import type { MenuProps, TableProps } from 'antd';
 import { Layout as AntdLayout, Menu, Dropdown, Space, Table, Tag } from 'antd';
@@ -130,6 +130,8 @@ const data: DataType[] = [
 export default function Layout({ children }: {
     children: React.ReactNode;
 }) {
+    const [collapsed, setCollapsed] = useState(false);
+
     const router = useRouter;
     // const handleMenuClick = ({ key }) => {
     //     router.apply(key);
@@ -153,28 +155,30 @@ export default function Layout({ children }: {
                     </a>
                 </Dropdown>
             </Header>
-            <AntdLayout>
-                <Sider width={200}>
+            <AntdLayout className={styles.innerSection}>
+                <Sider theme='light' width={200} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} >
                     <Menu
                         mode='inline'
                         defaultSelectedKeys={['/events']}
                         defaultOpenKeys={['/events']}
-                        style={{ height: '100%', borderRight: 0 }}
                         items={menus}
                     // onClick={handleMenuClick}
                     />
                 </Sider>
-                <AntdLayout style={{ /* padding: '0 24px 24px' */ }}>
+                <AntdLayout className={styles.contentSection}>
 
-                    <Content
-                        style={{
-                            padding: 24,
-                            margin: 0,
-                            minHeight: 280,
-                        }}
-                    >
+                    <Content className={styles.content}>
                         <Table columns={columns} dataSource={data} />
                     </Content>
+                    <Footer className={styles.footer} style={{ padding: '10px 20px', marginTop: '10px', borderTop: '1px solid #f0f0f0' }}>
+                        <div className={styles.menu}>
+                            <p className={styles.title}>Feedback</p>
+                            <a href='https://github.com/zhbh/imark-frontend/issues' target='_blank' title="GitHub websit">
+                                <Image src='images/github.svg' width={22} height={22} alt={'GitHub'}></Image>
+                                <p>GitHub</p>
+                            </a>
+                        </div>
+                    </Footer>
                 </AntdLayout>
             </AntdLayout>
         </AntdLayout>
