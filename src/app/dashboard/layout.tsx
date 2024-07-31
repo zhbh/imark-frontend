@@ -7,6 +7,7 @@ import { Layout as AntdLayout, Menu, Dropdown, Space, Table, Tag } from 'antd';
 import Image from 'next/image';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
+import dayjs from "dayjs";
 
 const { Header, Content, Footer, Sider } = AntdLayout;
 
@@ -37,37 +38,38 @@ const items: MenuProps['items'] = [
 
 interface DataType {
     key: string;
-    name: string;
-    age: number;
-    address: string;
-    tags: string[];
+    title: string;
+    content: String;
+    expiredTime: String;
+    lastDispatchTime: String;
+    status: string[];
 }
 
 const columns: TableProps<DataType>['columns'] = [
     {
         title: 'Title',
-        dataIndex: 'name',
-        key: 'name',
-        render: (text) => <a>{text}</a>,
+        dataIndex: 'title',
+        key: 'title',
     },
     {
         title: 'Content',
-        dataIndex: 'age',
-        key: 'age',
+        dataIndex: 'content',
+        key: 'content',
     },
     {
-        title: 'Address',
-        dataIndex: 'address',
-        key: 'address',
+        title: 'Expired Time',
+        dataIndex: 'expiredTime',
+        key: 'expiredTime',
     },
     {
-        title: 'Category',
-        key: 'tags',
-        dataIndex: 'tags',
-        render: (_, { tags }) => (
+        title: 'Status',
+        key: 'status',
+        dataIndex: 'status',
+        render: (_, { status }) => (
             <>
-                {tags.map((tag) => {
-                    let color = tag.length > 5 ? 'geekblue' : 'green';
+                {status.map((tag) => {
+                    let tagLowerCase = tag.toLowerCase();
+                    let color = tagLowerCase.includes('in progress') ? 'green' : tagLowerCase.includes('done') ? 'gray' : 'red';
                     if (tag === 'loser') {
                         color = 'volcano';
                     }
@@ -81,11 +83,17 @@ const columns: TableProps<DataType>['columns'] = [
         ),
     },
     {
+        title: 'Last Dispatch Time',
+        dataIndex: 'lastDispatchTime',
+        key: 'lastDispatchTime',
+    },
+    {
         title: 'Action',
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <a>Invite {record.name}</a>
+                <a>View</a>
+                <a>Edit</a>
                 <a>Delete</a>
             </Space>
         ),
@@ -95,24 +103,27 @@ const columns: TableProps<DataType>['columns'] = [
 const data: DataType[] = [
     {
         key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
+        title: 'Play badminton',
+        content: 'Address: The University of Waikato',
+        expiredTime: dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
+        lastDispatchTime: dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
+        status: ['In progress'],
     },
     {
         key: '2',
-        name: 'Jim Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-        tags: ['loser'],
+        title: 'Car for sale',
+        content: 'Good Price',
+        expiredTime: dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
+        lastDispatchTime: dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
+        status: ['Done'],
     },
     {
-        key: '3',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
+        key: '2',
+        title: 'XXXX',
+        content: 'YYYYYYYY',
+        expiredTime: dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
+        lastDispatchTime: dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
+        status: ['Disapproval'],
     },
 ];
 
