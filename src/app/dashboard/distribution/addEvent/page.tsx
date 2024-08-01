@@ -35,12 +35,17 @@ export default function AddEventPage() {
         <Input placeholder="Please enter an event’s title" />
       </Form.Item>
 
+      <Form.Item name="Content" label="Content" rules={[{ required: true }]}>
+        <Input.TextArea placeholder="Please enter your content" />
+      </Form.Item>
+
       <Form.Item name="Contact" label="Contact" rules={[{ required: true }]}>
         <Input placeholder="Please enter your email or phone number" />
       </Form.Item>
 
       <Form.Item name="Category" label="Category" rules={[{ required: true }]}>
         <Select
+          placeholder="Please select a category"
           options={[
             { label: 'Sport', value: 'sport' },
             { label: 'Marketplace', value: 'marketplace' },
