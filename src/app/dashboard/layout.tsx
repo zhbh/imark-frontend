@@ -64,7 +64,7 @@ export default function Layout({ children }: {
             </Header>
             <AntdLayout className={styles.innerSection}>
                 <Sider theme="light" width={250} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} >
-                    <Menu 
+                    <Menu
                         mode="inline"
                         defaultSelectedKeys={["/dashboard/distribution/events"]}
                         defaultOpenKeys={["events"]}
@@ -81,8 +81,7 @@ export default function Layout({ children }: {
                         <div className={styles.menu}>
                             <p className={styles.title}>Feedback</p>
                             <a href="https://github.com/zhbh/imark-frontend/issues" target="_blank" title="GitHub websit">
-                                <Image src="images/github.svg" width={22} height={22} alt={"GitHub"}></Image>
-                                <p>GitHub</p>
+                                <img src="./images/github.svg" />GitHub
                             </a>
                         </div>
                     </Footer>

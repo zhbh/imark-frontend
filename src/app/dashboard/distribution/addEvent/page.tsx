@@ -4,12 +4,13 @@ import { AimOutlined } from '@ant-design/icons';
 import { Alert, Button, DatePicker, Flex, Form, Input, message, Select, Space, Typography } from 'antd';
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
+import { EventType } from '@/types';
 
 export default function AddEventPage() {
   const router = useRouter();
   const [form] = Form.useForm();
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values: EventType) => {
     console.log(
       "%c [ values ]-53",
       "font-size:13px; background:pink; color:#bf2c9f;",
