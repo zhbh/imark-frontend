@@ -27,9 +27,11 @@
 }
 
 .content {
+    height: 100%;
     margin: 0px 10px;
     border-radius: 8px;
     background-color: white;
+    overflow: auto;
 }
 
 .footer {
