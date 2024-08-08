@@ -1,5 +1,5 @@
 # iMark
-Information Distribution System
+Information Distribution System in front-end side
 
 ## Getting Started
 
