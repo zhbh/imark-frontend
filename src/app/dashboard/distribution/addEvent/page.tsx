@@ -5,6 +5,8 @@ import { Alert, Button, DatePicker, Flex, Form, Input, message, Select, Space, T
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
 import { EventType } from '@/types';
+import dayjs from "dayjs";
+import { addEvent } from '@/api';
 
 export default function AddEventPage() {
   const router = useRouter();
@@ -12,10 +14,16 @@ export default function AddEventPage() {
 
   const handleSubmit = async (values: EventType) => {
     console.log(
-      "%c [ values ]-53",
+      "%c [ values ]-add event",
       "font-size:13px; background:pink; color:#bf2c9f;",
       values
     );
+
+    if (values.expirationDate) {
+      values.expirationDate = dayjs(values.expirationDate).valueOf();
+    }
+    
+    await addEvent(values);
     message.success("Submit Successfully");
 
     router.push("/dashboard/distribution/events");
@@ -31,19 +39,19 @@ export default function AddEventPage() {
       onFinish={handleSubmit}
     >
 
-      <Form.Item name="Title" label="Title" rules={[{ required: true }]}>
+      <Form.Item name="title" label="Title" rules={[{ required: true, message: "Title is required", }]}>
         <Input placeholder="Please enter an event’s title" />
       </Form.Item>
 
-      <Form.Item name="Content" label="Content" rules={[{ required: true }]}>
+      <Form.Item name="content" label="Content" rules={[{ required: true, message: "Content is required", }]}>
         <Input.TextArea placeholder="Please enter your content" />
       </Form.Item>
 
-      <Form.Item name="Contact" label="Contact" rules={[{ required: true }]}>
+      <Form.Item name="contact" label="Contact" rules={[{ required: true, message: "Contact is required", }]}>
         <Input placeholder="Please enter your email or phone number" />
       </Form.Item>
 
-      <Form.Item name="Category" label="Category" rules={[{ required: true }]}>
+      <Form.Item name="category" label="Category" rules={[{ required: true, message: "Category is required", }]}>
         <Select
           placeholder="Please select a category"
           options={[
@@ -55,7 +63,7 @@ export default function AddEventPage() {
         />
       </Form.Item>
 
-      <Form.Item label="Expiration Date" name="Expiration Date" rules={[{ required: true }]}>
+      <Form.Item label="expirationDate" name="Expiration Date" rules={[{ required: true, message: "Expiration Date is required", }]}>
         <DatePicker />
       </Form.Item>
 
