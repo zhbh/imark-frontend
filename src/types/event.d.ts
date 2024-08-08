@@ -4,7 +4,7 @@ export interface EventType {
     content: string;
     contact: string;
     category: string;
-    expirationDate: number;
-    dispatchDate: number;
+    expirationTime: number;
+    dispatchTime: number;
     location: string;
 }

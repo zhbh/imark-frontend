@@ -13,15 +13,14 @@ export default function AddEventPage() {
   const [form] = Form.useForm();
 
   const handleSubmit = async (values: EventType) => {
-    console.log(
-      "%c [ values ]-add event",
-      "font-size:13px; background:pink; color:#bf2c9f;",
-      values
-    );
+    console.log("🚀 ~ handleSubmit ~ values:", values)
 
-    if (values.expirationDate) {
-      values.expirationDate = dayjs(values.expirationDate).valueOf();
+    if (values.expirationTime) {
+      values.expirationTime = dayjs(values.expirationTime).valueOf();
+      console.log("🚀 ~ handleSubmit ~  values.expirationTime:",  values.expirationTime)
     }
+
+    console.log("🚀 ~ handleSubmit ~  values:",  values);
     
     await addEvent(values);
     message.success("Submit Successfully");
@@ -63,7 +62,7 @@ export default function AddEventPage() {
         />
       </Form.Item>
 
-      <Form.Item label="expirationDate" name="Expiration Date" rules={[{ required: true, message: "Expiration Date is required", }]}>
+      <Form.Item label="expirationTime" name="Expiration Date" rules={[{ required: true, message: "Expiration Date is required", }]}>
         <DatePicker />
       </Form.Item>
 

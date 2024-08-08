@@ -1,39 +1,44 @@
 "use client";
-import { Table, Space, Tag, TableProps } from "antd";
+import { Table, Space, Tag, TableProps, Tooltip, TablePaginationConfig, Modal, message, Button } from "antd";
+import { ExclamationCircleFilled } from "@ant-design/icons";
 import dayjs from "dayjs";
+import { useCallback, useEffect, useState } from "react";
+import { EventType } from "@/types";
+import { getEvents } from "@/api";
 
-interface DataType {
-    key: string;
-    title: string;
-    content: String;
-    expiredTime: String;
-    lastDispatchTime: String;
-    status: string[];
-}
-
-const columns: TableProps<DataType>["columns"] = [
+const columns = [
     {
         title: "Title",
         dataIndex: "title",
         key: "title",
+        width: 200
     },
     {
         title: "Content",
         dataIndex: "content",
         key: "content",
+        ellipsis: true,
+        width: 200,
+        render: (value: string) => {
+            return <Tooltip title={value} placement="topLeft">
+                {value}
+            </Tooltip>
+        },
     },
     {
         title: "Expiration Time",
         dataIndex: "expiredTime",
         key: "expiredTime",
+        width: 120,
+        render: (value: string) => dayjs(value).format("DD/MM/YYYY HH:mm"),
     },
     {
         title: "Status",
         key: "status",
         dataIndex: "status",
-        render: (_, { status }) => (
+        render: (value: [string]) => (
             <>
-                {status.map((tag) => {
+                {value.map((tag) => {
                     let tagLowerCase = tag.toLowerCase();
                     let color = tagLowerCase.includes("in progress") ? "green" : tagLowerCase.includes("done") ? "gray" : "red";
                     if (tag === "loser") {
@@ -52,21 +57,12 @@ const columns: TableProps<DataType>["columns"] = [
         title: "Last Dispatch Time",
         dataIndex: "lastDispatchTime",
         key: "lastDispatchTime",
-    },
-    {
-        title: "Action",
-        key: "action",
-        render: (_, record) => (
-            <Space size="middle">
-                <a>View</a>
-                <a>Edit</a>
-                <a>Delete</a>
-            </Space>
-        ),
+        width: 120,
+        render: (value: string) => dayjs(value).format("DD/MM/YYYY HH:mm"),
     },
 ];
 
-const data: DataType[] = [
+const data = [
     {
         key: "1",
         title: "Play badminton",
@@ -94,7 +90,78 @@ const data: DataType[] = [
 ];
 
 export default function EventsPage() {
+    const [list, setList] = useState<EventType[]>([]);
+    const [total, setTotal] = useState(0);
+    const [pagination, setPagination] = useState<TablePaginationConfig>({
+        current: 1,
+        pageSize: 20,
+        showSizeChanger: true,
+    });
+
+
+    const fetchData = useCallback(
+        () => {
+            getEvents({
+                current: pagination.current as number,
+                pageSize: pagination.pageSize as number,
+            }).then((res) => {
+                setList(res.data);
+                setTotal(res.total);
+            });
+
+        },
+        [pagination]
+    );
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData, pagination]);
+
+    const handleDeleteModal = (id: string) => {
+        Modal.confirm({
+            title: "Confirm to delete?",
+            icon: <ExclamationCircleFilled />,
+            okText: "Confirm",
+            cancelText: "Cancel",
+            async onOk() {
+                try {
+                    //to do
+                    message.success("Delete successfully!");
+
+                } catch (error) {
+                    console.error(error);
+                }
+            },
+        });
+    };
+
+    const handleTableChange = (pagination: TablePaginationConfig) => {
+        setPagination(pagination);
+    };
+
+    const operations = {
+        title: "Action",
+        key: "actions",
+        dataIndex: "actions",
+        render: (_: any, row: EventType) => (
+            <Space size="middle">
+                <a>View</a>
+                <a>Edit</a>
+                <Button
+                    type="link"
+                    danger
+                    block
+                    onClick={() => {
+                        handleDeleteModal(row.id as string);
+                    }}
+                >
+                    Delete
+                </Button>
+            </Space>
+        ),
+    };
+
     return (
-        <Table columns={columns} dataSource={data} />
+        <Table rowKey="id" columns={[...columns, operations]} dataSource={[]} />
     );
 }
