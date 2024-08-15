@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { EventType } from "@/types";
 import { getEvents, deleteEvent } from "@/api";
-import { Content } from "@/components";
+import { Content, GoogleMap, PopUpModal } from "@/components";
 
 const columns = [
     {
@@ -76,6 +76,8 @@ export default function Events() {
         pageSize: 10,
         showSizeChanger: true,
     });
+    const [openModal, setOpenModal] = useState(false);
+    const [location, setLocation] = useState("0,0");
 
     const fetchData = useCallback(
         (search?: EventType) => {
@@ -136,15 +138,17 @@ export default function Events() {
         dataIndex: "actions",
         render: (_: any, row: EventType) => (
             <Space size="small" align="center">
-                {/* <Button
+                <Button
                     type="link"
                     block
                     onClick={() => {
-
+                        setOpenModal(true);
+                        setLocation(row.location);
+                        console.log("🚀 ~ Events ~ row.location:", row.location)
                     }}
                 >
                     View
-                </Button> */}
+                </Button>
                 <Button
                     type="link"
                     block
@@ -229,6 +233,11 @@ export default function Events() {
                     }}
                 />
             </div>
+            <PopUpModal title="Please select a location" open={openModal} callback={(res: boolean) => {
+                setOpenModal(false);
+            }}>
+                <GoogleMap latlng={location}></GoogleMap>
+            </PopUpModal>
         </Content>
     );
 }

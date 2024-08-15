@@ -7,13 +7,28 @@ import { useRouter } from "next/navigation";
 import { EventFormType, EventType } from '@/types';
 import dayjs from "dayjs";
 import { addEvent, updateEVent } from '@/api';
-import { Content } from '@/components';
+import { Content, PopUpModal, GoogleMap } from '@/components';
 
 const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
   const router = useRouter();
   const [form] = Form.useForm();
+  const [openModal, setOpenModal] = useState(false);
+  const [location, setLocation] = useState("0,0");
 
   useEffect(() => {
+    if (editData) {
+      setLocation(editData.location);
+    } else {
+      navigator.geolocation.getCurrentPosition(
+        (position: GeolocationPosition) => {
+          const latValue = position.coords.latitude;
+          const lngValue = position.coords.longitude;
+
+          setLocation(`${latValue},${lngValue}`);
+        }
+      );
+    };
+
     if (editData) {
       console.log("🚀 ~ useEffect ~ editData:", editData)
       const data = {
@@ -32,6 +47,8 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
       values.expirationTime = dayjs(values.expirationTime).valueOf();
     }
 
+    values.location = location;
+
     console.log("🚀 ~ handleSubmit ~  values:", values);
 
     if (editData?._id) {
@@ -44,6 +61,8 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
 
     router.push("/dashboard/distribution/events");
   };
+
+  const handleMapModal = () => setOpenModal(true);
 
   return (
     <Content
@@ -97,7 +116,17 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
         </Form.Item>
 
         <Form.Item name="location" label="Location" rules={[{ required: false }]}>
-          <Button className={styles.location} shape="circle" icon={<AimOutlined />} />
+          <Button className={styles.location} shape="circle" icon={<AimOutlined />} onClick={handleMapModal} />
+          <PopUpModal title="Please select a location" open={openModal} callback={(res: boolean) => {
+            setOpenModal(false);
+            // if(res){
+
+            // }
+          }}>
+            <GoogleMap callback={(location: string) =>
+              setLocation(location)
+            } latlng={location}></GoogleMap>
+          </PopUpModal>
           <Alert message="If don’t pick up a location, the default one is your current spot." type="info" />
         </Form.Item>
 

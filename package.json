@@ -11,6 +11,8 @@
   "dependencies": {
     "@ant-design/cssinjs": "^1.21.0",
     "@ant-design/nextjs-registry": "^1.0.0",
+    "@googlemaps/markerclusterer": "^2.5.1",
+    "@vis.gl/react-google-maps": "latest",
     "antd": "^5.19.3",
     "axios": "^1.7.3",
     "mapbox-gl": "^3.6.0",
