@@ -1,6 +1,6 @@
 import { PropsWithChildren, ReactNode } from "react";
 
-import styles from "./index.module.css";
+import styles from "./page.module.css";
 
 const Content: React.FC<
   PropsWithChildren & {

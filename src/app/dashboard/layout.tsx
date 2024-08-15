@@ -21,7 +21,7 @@ const menus = [
             key: "/dashboard/distribution/events",
         }, {
             label: "Add Event",
-            key: "/dashboard/distribution/addEvent",
+            key: "/dashboard/distribution/add",
         },]
     }
 ];
@@ -72,8 +72,7 @@ export default function Layout({ children }: {
                         onClick={handleMenuClick}
                     />
                 </Sider>
-                <AntdLayout className={styles.contentSection}>
-
+                <AntdLayout>
                     <Content className={styles.content}>
                         {children}
                     </Content>

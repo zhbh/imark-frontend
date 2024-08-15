@@ -1,10 +1,8 @@
 .content {
     background-color: #fff;
-    padding: 32px;
-
     border-radius: 16px;
-    overflow: auto;
-    height: calc(100% - 56px);
+    overflow: hidden auto;
+    height: calc(100% - 40px);
 }
 
 .btn {
@@ -12,6 +10,6 @@
 }
 
 .title {
-    font-size: 24px;
-    margin-bottom: 24px;
+    font-size: 18px;
+    margin-bottom: 12px;
 }
