@@ -33,6 +33,7 @@ const columns = [
         title: "Expiration Time",
         dataIndex: "expirationTime",
         key: "expirationTime",
+        width: 160,
         render: (value: string) => dayjs(value).format("DD/MM/YYYY HH:mm"),
     },
     // {
@@ -61,6 +62,7 @@ const columns = [
         title: "Last Dispatch Time",
         dataIndex: "lastDispatchTime",
         key: "lastDispatchTime",
+        width: 160,
         render: (value: string) => dayjs(value).format("DD/MM/YYYY HH:mm"),
     },
 ];
