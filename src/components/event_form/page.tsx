@@ -1,18 +1,19 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { AimOutlined } from '@ant-design/icons';
-import { Alert, Button, DatePicker, Flex, Form, Input, message, Select, Space, Typography } from 'antd';
+import { Alert, Button, DatePicker, Flex, Form, Input, message, Modal, Select, Space, Typography } from 'antd';
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
 import { EventFormType, EventType } from '@/types';
 import dayjs from "dayjs";
 import { addEvent, updateEVent } from '@/api';
-import { Content, PopUpModal, GoogleMap } from '@/components';
+import { Content, GoogleMap } from '@/components';
 
 const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
   const router = useRouter();
+  const [modal, contextHolder] = Modal.useModal();
   const [form] = Form.useForm();
-  const [openModal, setOpenModal] = useState(false);
+  const [openMap, setOpenMap] = useState(false);
   const [location, setLocation] = useState("0,0");
 
   useEffect(() => {
@@ -62,7 +63,13 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
     router.push("/dashboard/distribution/events");
   };
 
-  const handleMapModal = () => setOpenModal(true);
+  const handleMap = () => {
+    setOpenMap(true);
+  };
+
+  const handleOk = (e: React.MouseEvent<HTMLElement>,) => setOpenMap(false);
+
+  const handleCancel = (e: React.MouseEvent<HTMLElement>) => setOpenMap(false);
 
   return (
     <Content
@@ -116,19 +123,24 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
         </Form.Item>
 
         <Form.Item name="location" label="Location" rules={[{ required: false }]}>
-          <Button className={styles.location} shape="circle" icon={<AimOutlined />} onClick={handleMapModal} />
-          <PopUpModal title="Please select a location" open={openModal} callback={(res: boolean) => {
-            setOpenModal(false);
-            // if(res){
-
-            // }
-          }}>
-            <GoogleMap callback={(location: string) =>
-              setLocation(location)
-            } latlng={location}></GoogleMap>
-          </PopUpModal>
-          <Alert message="If don’t pick up a location, the default one is your current spot." type="info" />
+          <Button className={styles.location} shape="circle" icon={<AimOutlined />} onClick={handleMap} ></Button>
         </Form.Item>
+        <GoogleMap
+          open={openMap}
+          latlng={location}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          callBack={(location) => {
+            setLocation(location);
+          }}
+        >
+        </GoogleMap>
+        <Form.Item wrapperCol={{ offset: 6 }}>
+          <Flex>
+            <Alert message="If don’t pick up a location, the default one is your current spot." type="info" />
+          </Flex>
+        </Form.Item>
+
 
         <Form.Item wrapperCol={{ offset: 6 }}>
           <Flex gap="small">

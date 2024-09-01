@@ -78,7 +78,7 @@ export default function Events() {
         pageSize: 10,
         showSizeChanger: true,
     });
-    const [openModal, setOpenModal] = useState(false);
+    const [openMap, setOpenMap] = useState(false);
     const [location, setLocation] = useState("0,0");
 
     const fetchData = useCallback(
@@ -144,7 +144,7 @@ export default function Events() {
                     type="link"
                     block
                     onClick={() => {
-                        setOpenModal(true);
+                        setOpenMap(true);
                         setLocation(row.location);
                         console.log("🚀 ~ Events ~ row.location:", row.location)
                     }}
@@ -172,6 +172,14 @@ export default function Events() {
                 </Button>
             </Space>
         ),
+    };
+
+    const handleOk = (e: React.MouseEvent<HTMLElement>) => {
+        setOpenMap(false);
+    };
+
+    const handleCancel = (e: React.MouseEvent<HTMLElement>) => {
+        setOpenMap(false);
     };
 
     return (
@@ -235,11 +243,14 @@ export default function Events() {
                     }}
                 />
             </div>
-            <PopUpModal title="Please select a location" open={openModal} callback={(res: boolean) => {
-                setOpenModal(false);
-            }}>
-                <GoogleMap latlng={location}></GoogleMap>
-            </PopUpModal>
+            <GoogleMap
+                title="Event Location"
+                open={openMap}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                latlng={location}
+                cancelButtonProps={{ disabled: true }}
+            ></GoogleMap>
         </Content>
     );
 }
