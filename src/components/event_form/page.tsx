@@ -60,7 +60,7 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
       message.success("Add Event Successfully");
     }
 
-    router.push("/dashboard/distribution/events");
+    router.push("/dashboard/distribution");
   };
 
   const handleMap = () => {
@@ -122,9 +122,14 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
           />
         </Form.Item>
 
-        <Form.Item name="location" label="Location" rules={[{ required: false }]}>
+        <Form.Item
+          name="location"
+          label="Location"
+          extra="If don’t pick up a location, the default one is your current spot."
+          rules={[{ required: false }]}>
           <Button className={styles.location} shape="circle" icon={<AimOutlined />} onClick={handleMap} ></Button>
         </Form.Item>
+        
         <GoogleMap
           open={openMap}
           latlng={location}
@@ -135,12 +140,6 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
           }}
         >
         </GoogleMap>
-        <Form.Item wrapperCol={{ offset: 6 }}>
-          <Flex>
-            <Alert message="If don’t pick up a location, the default one is your current spot." type="info" />
-          </Flex>
-        </Form.Item>
-
 
         <Form.Item wrapperCol={{ offset: 6 }}>
           <Flex gap="small">

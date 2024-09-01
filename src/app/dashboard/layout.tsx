@@ -3,11 +3,14 @@
 import React, { useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Layout as AntdLayout, Menu, Dropdown, Space } from "antd";
+import { Layout as AntdLayout, Menu, Dropdown, Space, message } from "antd";
 import Image from "next/image";
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
-import { HomeOutlined } from '@ant-design/icons';
+import { HomeOutlined, UserOutlined } from '@ant-design/icons';
+import { useCurrentUser } from "@/utils/user_info";
+import Link from "next/link";
+import { setLogout } from "@/api";
 
 const { Header, Content, Footer, Sider } = AntdLayout;
 
@@ -18,33 +21,66 @@ const menus = [
         key: "events",
         children: [{
             label: "Events",
-            key: "/dashboard/distribution/events",
+            key: "/dashboard/distribution",
         }, {
             label: "Add Event",
             key: "/dashboard/distribution/add",
         },]
-    }
-];
-
-const items: MenuProps["items"] = [
-    {
-        key: "/logou",
-        label: (
-            <a target="_blank" rel="" href="">
-                Log out
-            </a>
-        ),
     },
+    {
+        label: "User Management",
+        icon: <UserOutlined />,
+        key: "user",
+        children: [{
+            label: "Users",
+            key: "/dashboard/user",
+        }, {
+            label: "Add User",
+            key: "/dashboard/user/add",
+        },]
+    }
 ];
 
 
 export default function Layout({ children }: {
     children: React.ReactNode;
 }) {
+    const user = useCurrentUser();
     const [collapsed, setCollapsed] = useState(false);
+    const [current, setCurrent] = useState('events');
 
     const router = useRouter();
-    const handleMenuClick: MenuProps["onClick"] = ({ key }) => router.push(key);
+
+    const items: MenuProps["items"] = [
+        {
+            key: "EditUser",
+            label: (
+                <Link href={`/dashboard/user/edit/${user?._id}`}>
+                    User Edit
+                </Link>
+            ),
+        },
+        {
+            key: "logout",
+            label: (
+                <span
+                    onClick={async () => {
+                        await setLogout();
+                        localStorage.removeItem("user");
+                        message.success("Login out successfully!");
+                        router.push("/login");
+                    }}
+                >
+                    Log out
+                </span>
+            ),
+        },
+    ];
+
+    const handleMenuClick: MenuProps["onClick"] = ({ key }) => {
+        setCurrent(key);
+        router.push(key);
+    };
 
     return (
         <AntdLayout>
@@ -56,7 +92,7 @@ export default function Layout({ children }: {
                 <Dropdown menu={{ items }} overlayClassName={styles.dropOverlay} className={styles.user}>
                     <a onClick={(e) => e.preventDefault()}>
                         <Space>
-                            Admin
+                            {user?.nickName}
                             <DownOutlined />
                         </Space>
                     </a>
@@ -66,9 +102,10 @@ export default function Layout({ children }: {
                 <Sider theme="light" width={250} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} >
                     <Menu
                         mode="inline"
-                        defaultSelectedKeys={["/dashboard/distribution/events"]}
+                        defaultSelectedKeys={["/dashboard/distribution"]}
                         defaultOpenKeys={["events"]}
                         items={menus}
+                        selectedKeys={[current]}
                         onClick={handleMenuClick}
                     />
                 </Sider>

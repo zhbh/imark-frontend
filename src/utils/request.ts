@@ -1,6 +1,9 @@
+import { useCurrentUser } from "@/utils/user_info";
 import { message as AntdMessage } from "antd";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import Router from "next/router";
+
+// export const baseUrl = location.protocol + '//localhost';
 
 interface AxiosInstanceType extends AxiosInstance {
   get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
@@ -52,7 +55,7 @@ export const CreateAxiosInstance = (
       if (status === 200) {
         return data;
       } else if (status === 401) {
-        // return Router.push("/login");
+        return Router.push("/login");
       } else {
         AntdMessage.error(message);
         return Promise.reject(response.data);
@@ -60,11 +63,11 @@ export const CreateAxiosInstance = (
     },
     function (error) {
       if (error.response) {
-        // if (error.response.status === 401) {
-        //   return Router.push("/login");
-        // }
+        if (error.response.status === 401) {
+          return Router.push("/login");
+        }
       }
-      AntdMessage.error(error?.response?.data?.message || "Service error");
+      AntdMessage.error(error?.response?.data?.message || "The server happens errors");
       return Promise.reject(error);
     }
   );

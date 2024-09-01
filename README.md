@@ -27,7 +27,7 @@ Some pages have been implemented in development. There lists pages that can be b
 http://localhost:3000/dashboard
 
 ### Dashboard Events List
-http://localhost:3000/dashboard/distribution/events
+http://localhost:3000/dashboard/distribution
 
 ### Dashboard Add Event
 http://localhost:3000/dashboard/distribution/add

@@ -8,13 +8,13 @@
 
 .header {
     font-size: 48px;
-    margin: 40px 0 20px 0;
+    margin: 10px 0;
     color: #487bd7;
 }
 
 .form {
     width: 300px;
-    padding: 20px;
+    padding: 10px;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.05);
@@ -35,6 +35,6 @@
     width: 45%;
 }
 
-.loginBtn {
+.submitBtn {
     margin-right: 10%;
 }

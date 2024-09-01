@@ -1,15 +1,31 @@
 "use client";
 
 import request from "@/utils/request";
-import Icon from "@ant-design/icons";
-import { Button, Form, Input, message } from "antd";
+import { Button, Flex, Form, Input, message } from "antd";
 import classnames from "classnames";
 import Head from "next/head";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { UserLoginType } from "@/types";
 
 import styles from "./page.module.css";
+import Link from "next/link";
 
 export default function Login() {
+  const router = useRouter();
+
+  const handleFinish = async (values: UserLoginType) => {
+    try {
+      const res = await request.post("/api/login", values);
+      console.log("🚀 ~ handleFinish ~ res:", res)
+
+      localStorage.setItem("user", JSON.stringify(res.data));
+      message.success("Log in successfully!");
+
+      router.push("/dashboard");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -19,6 +35,7 @@ export default function Login() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <main className={styles.main}>
         <header className={styles.header}>
           iMark
@@ -27,11 +44,12 @@ export default function Login() {
           <Form
             name="basic"
             initialValues={{ name: "", password: "" }}
-            // onFinish={onFinish}
+            onFinish={handleFinish}
             layout="vertical"
             autoComplete="off"
             size="large"
           >
+
             <Form.Item
               name="name"
               label={<span className={styles.label}>Username</span>}
@@ -39,6 +57,7 @@ export default function Login() {
             >
               <Input placeholder="Please input your username" />
             </Form.Item>
+
             <Form.Item
               name="password"
               label={<span className={styles.label}>Password</span>}
@@ -46,6 +65,7 @@ export default function Login() {
             >
               <Input.Password placeholder="Please input your password" />
             </Form.Item>
+
             <Form.Item>
               <Button
                 type="primary"
@@ -57,7 +77,15 @@ export default function Login() {
                 Log in
               </Button>
             </Form.Item>
+            
           </Form>
+
+          <Flex justify="flex-end">
+            <Link href="/register">
+              Sign up
+            </Link>
+          </Flex>
+
         </div>
       </main>
     </>

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useCallback, useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { AdvancedMarker, APIProvider, Map, MapCameraChangedEvent, MapMouseEvent, Pin } from "@vis.gl/react-google-maps";

@@ -1,15 +1,31 @@
 "use client";
 
 import request from "@/utils/request";
-import Icon from "@ant-design/icons";
-import { Button, Form, Input, message } from "antd";
+import { Button, Flex, Form, Input, message, Radio } from "antd";
 import classnames from "classnames";
 import Head from "next/head";
-import Image from "next/image";
 
 import styles from "./page.module.css";
+import Link from "next/link";
+
+import { useRouter } from "next/navigation";
+import { UserLoginType } from "@/types";
 
 export default function Register() {
+  const router = useRouter();
+
+  const handleFinish = async (values: UserLoginType) => {
+    try {
+      const res = await request.post("/api/register", values);
+      console.log("🚀 ~ handleFinish ~ res:", res)
+
+      message.success("Register successfully!");
+
+      router.push("/login");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -19,6 +35,7 @@ export default function Register() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <main className={styles.main}>
         <header className={styles.header}>
           iMark
@@ -26,8 +43,8 @@ export default function Register() {
         <div className={styles.form}>
           <Form
             name="basic"
-            initialValues={{ name: "", password: "" }}
-            // onFinish={onFinish}
+            initialValues={{ name: "", password: "", confirmPassword: "", nickName: "", role: "user", sex: "male", status: "on" }}
+            onFinish={handleFinish}
             layout="vertical"
             autoComplete="off"
             size="large"
@@ -35,36 +52,88 @@ export default function Register() {
             <Form.Item
               name="name"
               label={<span className={styles.label}>Username</span>}
-              rules={[{ required: true, message: "Please input your username" }]}
+              validateTrigger="onBlur"
+              rules={[{ required: true, message: "username is required" }, { max: 20, message: "Continue input to exceed 20 chars", }]}
             >
               <Input placeholder="Please input your username" />
             </Form.Item>
+
+            <Form.Item
+              label="Nickname"
+              extra="Display name"
+              name="nickName"
+              hidden
+            >
+              <Input placeholder="Please input the nickname" />
+            </Form.Item>
+
             <Form.Item
               name="password"
               label={<span className={styles.label}>Password</span>}
-              rules={[{ required: true, message: "Please input your password" }]}
+              rules={[{ required: true, message: "Please input your password" }, { min: 6, message: "At least 6 chars", }]}
             >
               <Input.Password placeholder="Please input your password" />
             </Form.Item>
+
             <Form.Item
               name="confirmPassword"
               label={<span className={styles.label}>Confirm Password</span>}
-              rules={[{ required: true, message: "Please input your password again" }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Please confirm your password!",
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("The new password that you entered do not match!"));
+                  },
+                }),
+              ]}
             >
               <Input.Password placeholder="Please input your password" />
             </Form.Item>
+
+            <Form.Item label="Gender" name="sex">
+              <Radio.Group defaultValue="male">
+                <Radio value="male">Male</Radio>
+                <Radio value="female">Female</Radio>
+              </Radio.Group>
+            </Form.Item>
+
+            <Form.Item label="Status" name="status" hidden>
+              <Radio.Group defaultValue="on">
+                <Radio value="on">Activate</Radio>
+              </Radio.Group>
+            </Form.Item>
+
+            <Form.Item label="Role" name="role" hidden>
+              <Radio.Group defaultValue="User">
+                <Radio value="user">User</Radio>
+              </Radio.Group>
+            </Form.Item>
+
             <Form.Item>
               <Button
                 type="primary"
                 htmlType="submit"
                 block
-                className={classnames(styles.btn, styles.loginBtn)}
+                className={classnames(styles.btn, styles.submitBtn)}
                 size="large"
               >
                 Sign up
               </Button>
             </Form.Item>
+
           </Form>
+
+          <Flex justify="flex-end">
+            <Link href="/login">
+              Log in
+            </Link>
+          </Flex>
         </div>
       </main>
     </>
