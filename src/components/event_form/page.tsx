@@ -8,9 +8,11 @@ import { EventFormType, EventType } from '@/types';
 import dayjs from "dayjs";
 import { addEvent, updateEVent } from '@/api';
 import { Content, GoogleMap } from '@/components';
+import { useCurrentUser } from "@/utils/user_info";
 
 const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
   const router = useRouter();
+  const user = useCurrentUser();
   const [modal, contextHolder] = Modal.useModal();
   const [form] = Form.useForm();
   const [openMap, setOpenMap] = useState(false);
@@ -49,6 +51,7 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
     }
 
     values.location = location;
+    values.user = user!;
 
     console.log("🚀 ~ handleSubmit ~  values:", values);
 
@@ -129,7 +132,7 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
           rules={[{ required: false }]}>
           <Button className={styles.location} shape="circle" icon={<AimOutlined />} onClick={handleMap} ></Button>
         </Form.Item>
-        
+
         <GoogleMap
           open={openMap}
           latlng={location}

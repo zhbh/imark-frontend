@@ -1,7 +1,9 @@
+"use client";
+
 import { useCurrentUser } from "@/utils/user_info";
 import { message as AntdMessage } from "antd";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import Router from "next/router";
+import { redirect } from "next/navigation";
 
 // export const baseUrl = location.protocol + '//localhost';
 
@@ -52,10 +54,14 @@ export const CreateAxiosInstance = (
   instance.interceptors.response.use(
     function (response) {
       const { status, data, message } = response as any;
+      console.log("🚀 ~ status:", status)
       if (status === 200) {
         return data;
       } else if (status === 401) {
-        return Router.push("/login");
+        window.location.href = "/login";
+        // return redirect("/login");
+      } else if (status === 501) {
+        window.location.href = "/dashboard";
       } else {
         AntdMessage.error(message);
         return Promise.reject(response.data);
@@ -64,7 +70,10 @@ export const CreateAxiosInstance = (
     function (error) {
       if (error.response) {
         if (error.response.status === 401) {
-          return Router.push("/login");
+          window.location.href = "/login";
+          // return Router.redirect("/login");
+        } else if (error.response.status === 501) {
+          window.location.href = "/dashboard";
         }
       }
       AntdMessage.error(error?.response?.data?.message || "The server happens errors");

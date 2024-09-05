@@ -1,3 +1,5 @@
+import { UserType } from "./user";
+
 export interface EventType {
     _id?: string
     title: string;
@@ -7,6 +9,7 @@ export interface EventType {
     expirationTime: number;
     dispatchTime: number;
     location: string;
+    user: UserType;
 }
 
 export interface EventFormType {

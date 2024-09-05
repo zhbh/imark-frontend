@@ -1,8 +1,9 @@
 "use client";
 
 import { getUserList, deleteUser, updateUser } from "@/api";
-import { Content } from "@/components";
-import { UserQueryType, UserType, USER_STATUS } from "@/types";
+import { Auth, Content } from "@/components";
+import { USER_ROLE, USER_STATUS } from "@/constants";
+import { UserQueryType, UserType } from "@/types";
 import { useCurrentUser } from "@/utils/user_info";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import {
@@ -71,7 +72,6 @@ export default function Book() {
   const user = useCurrentUser();
   const [list, setList] = useState<UserType[]>([]);
 
-  // const [categoryList, setCategoryList] = useState<CategoryType[]>([]);
   const [total, setTotal] = useState(0);
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
@@ -80,7 +80,7 @@ export default function Book() {
   });
   const router = useRouter();
 
-  const columns = [
+  const columns = user?.role === USER_ROLE.ADMIN ? [
     ...COLUMNS,
     {
       title: "Operation",
@@ -117,7 +117,7 @@ export default function Book() {
         </Space>
       ),
     },
-  ];
+  ] : COLUMNS;
 
   const fetchData = useCallback(
     (search?: UserQueryType) => {
@@ -175,71 +175,73 @@ export default function Book() {
 
   return (
     <>
-      <Content
-        title="Users"
-        operation={
-          <Button type="primary" size="small" onClick={handleAdd}>
-            Add User
-          </Button>
-        }
-      >
-        <Form
-          form={form}
-          name="search"
-          className={styles.form}
-          style={{ margin: "10px 0 0 10px" }}
-          onFinish={handleSearchFinish}
+      <Auth>
+        <Content
+          title="Users"
+          operation={
+            <Button type="primary" size="small" onClick={handleAdd}>
+              Add User
+            </Button>
+          }
         >
-          <Row gutter={24}>
-            <Col span={5}>
-              <Form.Item name="name" label="Name">
-                <Input placeholder="Please input a name" allowClear />
-              </Form.Item>
-            </Col>
-            <Col span={5}>
-              <Form.Item name="status" label="Status">
-                <Select placeholder="Please select a status" allowClear>
-                  <Option key={USER_STATUS.ON} value={USER_STATUS.ON}>
-                    Activate
-                  </Option>
-                  <Option key={USER_STATUS.OFF} value={USER_STATUS.OFF}>
-                    Forbidden
-                  </Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={9} style={{ textAlign: "left" }}>
-              <Button type="primary" htmlType="submit">
-                Search
-              </Button>
-              <Button
-                style={{ margin: "0 8px" }}
-                onClick={() => {
-                  form.resetFields();
-                  fetchData();
-                }}
-              >
-                Clear
-              </Button>
-            </Col>
-          </Row>
-        </Form>
+          <Form
+            form={form}
+            name="search"
+            className={styles.form}
+            style={{ margin: "10px 0 0 10px" }}
+            onFinish={handleSearchFinish}
+          >
+            <Row gutter={24}>
+              <Col span={5}>
+                <Form.Item name="name" label="Name">
+                  <Input placeholder="Please input a name" allowClear />
+                </Form.Item>
+              </Col>
+              <Col span={5}>
+                <Form.Item name="status" label="Status">
+                  <Select placeholder="Please select a status" allowClear>
+                    <Option key={USER_STATUS.ON} value={USER_STATUS.ON}>
+                      Activate
+                    </Option>
+                    <Option key={USER_STATUS.OFF} value={USER_STATUS.OFF}>
+                      Forbidden
+                    </Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={9} style={{ textAlign: "left" }}>
+                <Button type="primary" htmlType="submit">
+                  Search
+                </Button>
+                <Button
+                  style={{ margin: "0 8px" }}
+                  onClick={() => {
+                    form.resetFields();
+                    fetchData();
+                  }}
+                >
+                  Clear
+                </Button>
+              </Col>
+            </Row>
+          </Form>
 
-        <div className={styles.tableWrap}>
-          <Table
-            rowKey="_id"
-            dataSource={list}
-            columns={columns}
-            onChange={handleTableChange}
-            pagination={{
-              ...pagination,
-              total: total,
-              showTotal: () => `Total ${total} records`,
-            }}
-          />
-        </div>
+          <div className={styles.tableWrap}>
+            <Table
+              rowKey="_id"
+              dataSource={list}
+              columns={columns}
+              onChange={handleTableChange}
+              pagination={{
+                ...pagination,
+                total: total,
+                showTotal: () => `Total ${total} records`,
+              }}
+            />
+          </div>
 
-      </Content>
+        </Content>
+      </Auth>
     </>
   );
 }

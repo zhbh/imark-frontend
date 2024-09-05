@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Layout as AntdLayout, Menu, Dropdown, Space, message } from "antd";
@@ -10,42 +10,52 @@ import { HomeOutlined, UserOutlined, ClusterOutlined } from '@ant-design/icons';
 import { useCurrentUser } from "@/utils/user_info";
 import Link from "next/link";
 import { setLogout } from "@/api";
+import { USER_ROLE } from "@/constants";
 
 const { Header, Content, Footer, Sider } = AntdLayout;
 
-const menus = [
+const MENUS = [
     {
         label: "Event Management",
         icon: <HomeOutlined />,
         key: "events",
-        children: [{
-            label: "Events",
-            key: "/dashboard/distribution",
-        }, {
-            label: "Add Event",
-            key: "/dashboard/distribution/add",
-        },]
+        role: USER_ROLE.USER,
+        children: [
+            {
+                label: "Events",
+                key: "/dashboard/distribution",
+                role: USER_ROLE.USER,
+            },
+            {
+                label: "Add Event",
+                key: "/dashboard/distribution/add",
+                role: USER_ROLE.USER,
+            },
+        ]
     },
     {
         label: "User Management",
         icon: <UserOutlined />,
         key: "user",
-        children: [{
-            label: "Users",
-            key: "/dashboard/user",
-        }, {
-            label: "Add User",
-            key: "/dashboard/user/add",
-        },]
+        role: USER_ROLE.ADMIN,
+        children: [
+            {
+                label: "Users",
+                key: "/dashboard/user",
+                role: USER_ROLE.ADMIN,
+            },
+            {
+                label: "Add User",
+                key: "/dashboard/user/add",
+                role: USER_ROLE.ADMIN,
+            },
+        ]
     },
     {
         label: "Category Management",
         icon: <ClusterOutlined />,
-        key: "category",
-        children: [{
-            label: "Category",
-            key: "/dashboard/category",
-        }]
+        key: "/dashboard/category",
+        role: USER_ROLE.ADMIN,
     }
 ];
 
@@ -64,7 +74,7 @@ export default function Layout({ children }: {
             key: "EditUser",
             label: (
                 <Link href={`/dashboard/user/edit/${user?._id}`}>
-                    User Edit
+                    Profile
                 </Link>
             ),
         },
@@ -89,6 +99,21 @@ export default function Layout({ children }: {
         router.push(key);
     };
 
+    const menusItems = useMemo(() => {
+        if (user?.role === USER_ROLE.USER) {
+            return MENUS.filter((item) => {
+                if (item.children) {
+                    item.children = item.children.filter(
+                        (k) => k.role === USER_ROLE.USER
+                    );
+                }
+                return item.role === USER_ROLE.USER;
+            });
+        } else {
+            return MENUS;
+        }
+    }, [user]);
+
     return (
         <AntdLayout>
             <Header className={styles.header} style={{
@@ -96,6 +121,7 @@ export default function Layout({ children }: {
                 backgroundColor: "white"
             }}>
                 <div className={styles.logo}></div>
+
                 <Dropdown menu={{ items }} overlayClassName={styles.dropOverlay} className={styles.user}>
                     <a onClick={(e) => e.preventDefault()}>
                         <Space>
@@ -104,22 +130,27 @@ export default function Layout({ children }: {
                         </Space>
                     </a>
                 </Dropdown>
+
             </Header>
             <AntdLayout className={styles.innerSection}>
+
                 <Sider theme="light" width={250} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} >
                     <Menu
                         mode="inline"
                         defaultSelectedKeys={["/dashboard/distribution"]}
                         defaultOpenKeys={["events"]}
-                        items={menus}
+                        items={menusItems}
                         selectedKeys={[current]}
                         onClick={handleMenuClick}
                     />
                 </Sider>
+
                 <AntdLayout>
+
                     <Content className={styles.content}>
                         {children}
                     </Content>
+
                     <Footer className={styles.footer} style={{ padding: "10px 20px", marginTop: "10px", borderTop: "1px solid #f0f0f0" }}>
                         <div className={styles.menu}>
                             <p className={styles.title}>Feedback</p>
@@ -128,6 +159,7 @@ export default function Layout({ children }: {
                             </a>
                         </div>
                     </Footer>
+
                 </AntdLayout>
             </AntdLayout>
         </AntdLayout>

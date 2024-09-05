@@ -2,7 +2,7 @@
 
 import { addUser, updateUser } from "@/api";
 import { Content } from "@/components";
-import { USER_ROLE, USER_SEX, USER_STATUS } from "@/types";
+import { USER_ROLE, USER_SEX, USER_STATUS } from "@/constants";
 import { UserFormProps, UserType } from "@/types";
 import { useCurrentUser } from "@/utils/user_info";
 import { Button, Flex, Form, Input, Radio, message } from "antd";
@@ -110,14 +110,14 @@ const UserForm: React.FC<UserFormProps> = ({
             </Radio.Group>
           </Form.Item>
 
-          <Form.Item label="Status" name="status">
+          <Form.Item label="Status" name="status" hidden={user?.role === USER_ROLE.USER}>
             <Radio.Group disabled={user?.role === USER_ROLE.USER}>
               <Radio value="on">Activate</Radio>
               <Radio value="off">Forbidden</Radio>
             </Radio.Group>
           </Form.Item>
 
-          <Form.Item label="Role" name="role">
+          <Form.Item label="Role" name="role" hidden={user?.role === USER_ROLE.USER}>
             <Radio.Group disabled={user?.role === USER_ROLE.USER}>
               <Radio value="user">User</Radio>
               <Radio value="admin">Administration</Radio>

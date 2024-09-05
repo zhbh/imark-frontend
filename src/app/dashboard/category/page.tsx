@@ -1,6 +1,6 @@
 "use client";
 
-import { Content } from "@/components";
+import { Auth, Content } from "@/components";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import {
   Button,
@@ -151,107 +151,109 @@ export default function Book() {
 
   return (
     <>
-      <Content
-        title="Category"
-        operation={
-          <Button type="primary" onClick={handleAddCategory}>
-            Add Category
-          </Button>
-        }
-      >
-        <Form
-          form={form}
-          name="search"
-          className={styles.form}
-          style={{ margin: "10px 0 0 10px" }}
-          onFinish={handleSearchFinish}
+      <Auth>
+        <Content
+          title="Category"
+          operation={
+            <Button type="primary" onClick={handleAddCategory}>
+              Add Category
+            </Button>
+          }
         >
-          <Row gutter={24}>
-
-            <Col span={5}>
-              <Form.Item name="name" label="Name">
-                <Input placeholder="Please input the name" allowClear />
-              </Form.Item>
-            </Col>
-
-            <Col span={5}>
-              <Form.Item name="category" label="Category">
-                <Select
-                  allowClear
-                  placeholder="Please select a category"
-                // options={} todo
-                ></Select>
-              </Form.Item>
-            </Col>
-
-            <Col span={9} style={{ textAlign: "left" }}>
-              <Button type="primary" htmlType="submit">
-                Search
-              </Button>
-              <Button
-                style={{ margin: "0 8px" }}
-                onClick={() => {
-                  form.resetFields();
-                }}
-              >
-                Clear
-              </Button>
-            </Col>
-
-          </Row>
-        </Form>
-
-        <div className={styles.tableWrap}>
-          <Table
-            rowKey="_id"
-            dataSource={list}
-            columns={columns}
-            onChange={handleTableChange}
-            pagination={{
-              ...pagination,
-              total: total,
-              showTotal: () => `Total ${total} record(s)`,
-            }}
-          />
-        </div>
-
-        {isModalOpen && (
-          <Modal
-            title={editData._id ? "Edit Category" : "Create Category"}
-            open={isModalOpen}
-            onOk={handleOk}
-            okText="Confirm"
-            cancelText="Cancel"
-            onCancel={handleCancel}
+          <Form
+            form={form}
+            name="search"
+            className={styles.form}
+            style={{ margin: "10px 0 0 10px" }}
+            onFinish={handleSearchFinish}
           >
-            <Form
-              name="category"
-              form={form}
-              labelCol={{ span: 4 }}
-              wrapperCol={{ span: 20 }}
-              style={{ maxWidth: 600 }}
-              initialValues={editData ? editData : {}}
-              onFinish={handleEditCategoryFinish}
-              autoComplete="off"
+            <Row gutter={24}>
+
+              <Col span={5}>
+                <Form.Item name="name" label="Name">
+                  <Input placeholder="Please input the name" allowClear />
+                </Form.Item>
+              </Col>
+
+              <Col span={5}>
+                <Form.Item name="category" label="Category">
+                  <Select
+                    allowClear
+                    placeholder="Please select a category"
+                  // options={} todo
+                  ></Select>
+                </Form.Item>
+              </Col>
+
+              <Col span={9} style={{ textAlign: "left" }}>
+                <Button type="primary" htmlType="submit">
+                  Search
+                </Button>
+                <Button
+                  style={{ margin: "0 8px" }}
+                  onClick={() => {
+                    form.resetFields();
+                  }}
+                >
+                  Clear
+                </Button>
+              </Col>
+
+            </Row>
+          </Form>
+
+          <div className={styles.tableWrap}>
+            <Table
+              rowKey="_id"
+              dataSource={list}
+              columns={columns}
+              onChange={handleTableChange}
+              pagination={{
+                ...pagination,
+                total: total,
+                showTotal: () => `Total ${total} record(s)`,
+              }}
+            />
+          </div>
+
+          {isModalOpen && (
+            <Modal
+              title={editData._id ? "Edit Category" : "Create Category"}
+              open={isModalOpen}
+              onOk={handleOk}
+              okText="Confirm"
+              cancelText="Cancel"
+              onCancel={handleCancel}
             >
-
-              <Form.Item
-                label="Name"
-                name="name"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please inpunt a name",
-                  },
-                ]}
+              <Form
+                name="category"
+                form={form}
+                labelCol={{ span: 4 }}
+                wrapperCol={{ span: 20 }}
+                style={{ maxWidth: 600 }}
+                initialValues={editData ? editData : {}}
+                onFinish={handleEditCategoryFinish}
+                autoComplete="off"
               >
-                <Input placeholder="Please inpunt a name" />
-              </Form.Item>
 
-            </Form>
-          </Modal>
-        )}
-      </Content>
+                <Form.Item
+                  label="Name"
+                  name="name"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please inpunt a name",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Please inpunt a name" />
+                </Form.Item>
+
+              </Form>
+            </Modal>
+          )}
+        </Content>
+      </Auth>
     </>
   );
 }
