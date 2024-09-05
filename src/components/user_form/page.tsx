@@ -90,13 +90,6 @@ const UserForm: React.FC<UserFormProps> = ({
             <Input placeholder="Please input the nickname" />
           </Form.Item>
 
-          <Form.Item label="Gender" name="sex">
-            <Radio.Group>
-              <Radio value="male">Male</Radio>
-              <Radio value="female">Female</Radio>
-            </Radio.Group>
-          </Form.Item>
-
           <Form.Item
             label="Password"
             name="password"
@@ -108,6 +101,13 @@ const UserForm: React.FC<UserFormProps> = ({
             ]}
           >
             <Input.Password placeholder="Please input the password" type="password" />
+          </Form.Item>
+
+          <Form.Item label="Gender" name="sex">
+            <Radio.Group>
+              <Radio value="male">Male</Radio>
+              <Radio value="female">Female</Radio>
+            </Radio.Group>
           </Form.Item>
 
           <Form.Item label="Status" name="status">

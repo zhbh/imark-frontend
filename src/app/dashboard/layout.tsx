@@ -67,7 +67,6 @@ export default function Layout({ children }: {
                     onClick={async () => {
                         await setLogout();
                         localStorage.removeItem("user");
-                        message.success("Login out successfully!");
                         router.push("/login");
                     }}
                 >
