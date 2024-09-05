@@ -117,7 +117,7 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
         <Form.Item name="expirationTime" label="Expiration Date" rules={[{ required: true, message: "Expiration Date is required", }]}>
           <DatePicker
             showTime={{ format: 'HH:mm' }}
-            format="YYYY-MM-DD HH:mm"
+            format="DD/MM/YYYY HH:mm"
             minDate={dayjs(new Date().toLocaleString(), "DD/MM/YYYY HH:MM")}
           />
         </Form.Item>

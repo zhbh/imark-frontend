@@ -197,6 +197,7 @@ export default function Events() {
                             <Input placeholder="Please input" />
                         </Form.Item>
                     </Col>
+
                     <Col span={8}>
                         <Form.Item name="content" label="Content">
                             <Input placeholder="Please input" />

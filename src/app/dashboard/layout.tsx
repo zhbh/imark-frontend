@@ -4,10 +4,9 @@ import React, { useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Layout as AntdLayout, Menu, Dropdown, Space, message } from "antd";
-import Image from "next/image";
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
-import { HomeOutlined, UserOutlined } from '@ant-design/icons';
+import { HomeOutlined, UserOutlined, ClusterOutlined } from '@ant-design/icons';
 import { useCurrentUser } from "@/utils/user_info";
 import Link from "next/link";
 import { setLogout } from "@/api";
@@ -16,7 +15,7 @@ const { Header, Content, Footer, Sider } = AntdLayout;
 
 const menus = [
     {
-        label: "Information Distribution Management",
+        label: "Event Management",
         icon: <HomeOutlined />,
         key: "events",
         children: [{
@@ -38,6 +37,15 @@ const menus = [
             label: "Add User",
             key: "/dashboard/user/add",
         },]
+    },
+    {
+        label: "Category Management",
+        icon: <ClusterOutlined />,
+        key: "category",
+        children: [{
+            label: "Category",
+            key: "/dashboard/category",
+        }]
     }
 ];
 
