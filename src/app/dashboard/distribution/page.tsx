@@ -36,34 +36,27 @@ const columns = [
         width: 160,
         render: (value: string) => dayjs(value).format("DD/MM/YYYY HH:mm"),
     },
-    // {
-    // title: "Status",
-    // key: "status",
-    // dataIndex: "status",
-    // width: 120,
-    // render: (value: [string]) => (
-    //     <>
-    //         {value.map((tag) => {
-    //             let tagLowerCase = tag.toLowerCase();
-    //             let color = tagLowerCase.includes("in progress") ? "green" : tagLowerCase.includes("done") ? "gray" : "red";
-    //             if (tag === "loser") {
-    //                 color = "volcano";
-    //             }
-    //             return (
-    //                 <Tag color={color} key={tag}>
-    //                     {tag.toUpperCase()}
-    //                 </Tag>
-    //             );
-    //         })}
-    //     </>
-    // ),
-    // },
     {
-        title: "Last Dispatch Time",
-        dataIndex: "lastDispatchTime",
-        key: "lastDispatchTime",
-        width: 160,
-        render: (value: string) => dayjs(value).format("DD/MM/YYYY HH:mm"),
+        title: "Status",
+        key: "status",
+        dataIndex: "status",
+        width: 100,
+        render: (_: any, row: EventType) => row.expirationTime > Date.now() ? (
+            <Tag color="green"  >
+                In Progress
+            </Tag >
+        ) : (
+            <Tag color="gray"  >
+                Done
+            </Tag >
+        ),
+    },
+    {
+        title: "Dispatch Time",
+        dataIndex: "dispatchTime",
+        key: "dispatchTime",
+        width: 120,
+        render: (value: string) => dayjs(value).format("DD/MM/YYYY"),
     },
 ];
 
