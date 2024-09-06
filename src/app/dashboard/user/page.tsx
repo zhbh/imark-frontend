@@ -7,18 +7,7 @@ import { UserQueryType, UserType } from "@/types";
 import { useCurrentUser } from "@/utils/user_info";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import {
-  Button,
-  Col,
-  Form,
-  Input,
-  Modal,
-  Row,
-  Select,
-  Space,
-  Table,
-  TablePaginationConfig,
-  Tag,
-  message,
+  Button, Col, Form, Input, Modal, Row, Select, Space, Table, TablePaginationConfig, Tag, message,
 } from "antd";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
@@ -83,7 +72,7 @@ export default function Book() {
   const columns = user?.role === USER_ROLE.ADMIN ? [
     ...COLUMNS,
     {
-      title: "Operation",
+      title: "Operations",
       dataIndex: "",
       key: "action",
       render: (_: any, row: UserType) => (
@@ -192,11 +181,13 @@ export default function Book() {
             onFinish={handleSearchFinish}
           >
             <Row gutter={24}>
+
               <Col span={5}>
                 <Form.Item name="name" label="Name">
                   <Input placeholder="Please input a name" allowClear />
                 </Form.Item>
               </Col>
+
               <Col span={5}>
                 <Form.Item name="status" label="Status">
                   <Select placeholder="Please select a status" allowClear>
@@ -209,6 +200,7 @@ export default function Book() {
                   </Select>
                 </Form.Item>
               </Col>
+
               <Col span={9} style={{ textAlign: "left" }}>
                 <Button type="primary" htmlType="submit">
                   Search
@@ -223,6 +215,7 @@ export default function Book() {
                   Clear
                 </Button>
               </Col>
+
             </Row>
           </Form>
 

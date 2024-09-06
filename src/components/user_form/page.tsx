@@ -120,7 +120,7 @@ const UserForm: React.FC<UserFormProps> = ({
           <Form.Item label="Role" name="role" hidden={user?.role === USER_ROLE.USER}>
             <Radio.Group disabled={user?.role === USER_ROLE.USER}>
               <Radio value="user">User</Radio>
-              <Radio value="admin">Administration</Radio>
+              <Radio value="admin">Administrator</Radio>
             </Radio.Group>
           </Form.Item>
 

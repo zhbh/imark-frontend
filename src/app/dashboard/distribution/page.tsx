@@ -33,7 +33,7 @@ const columns = [
         title: "Expiration Time",
         dataIndex: "expirationTime",
         key: "expirationTime",
-        width: 160,
+        width: 150,
         render: (value: string) => dayjs(value).format("DD/MM/YYYY HH:mm"),
     },
     {
@@ -128,7 +128,7 @@ export default function Events() {
     };
 
     const operations = {
-        title: "Action",
+        title: "Operations",
         key: "actions",
         dataIndex: "actions",
         render: (_: any, row: EventType) => (
@@ -233,7 +233,7 @@ export default function Events() {
                     pagination={{
                         ...pagination,
                         total: total,
-                        showTotal: () => `Total ${total} records`,
+                        showTotal: () => `Total ${total} record(s)`,
                     }}
                 />
             </div>

@@ -3,10 +3,10 @@
 import React, { useMemo, useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Layout as AntdLayout, Menu, Dropdown, Space, message } from "antd";
+import { Layout as AntdLayout, Menu, Dropdown, Space, message, Flex } from "antd";
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
-import { HomeOutlined, UserOutlined, ClusterOutlined } from '@ant-design/icons';
+import { HomeOutlined, UserOutlined, ClusterOutlined, GithubOutlined, MailOutlined } from '@ant-design/icons';
 import { useCurrentUser } from "@/utils/user_info";
 import Link from "next/link";
 import { setLogout } from "@/api";
@@ -14,7 +14,7 @@ import { USER_ROLE } from "@/constants";
 
 const { Header, Content, Footer, Sider } = AntdLayout;
 
-const MENUS = [
+const LEFT_SIDE_MENUS = [
     {
         label: "Event Management",
         icon: <HomeOutlined />,
@@ -64,44 +64,65 @@ export default function Layout({ children }: {
     children: React.ReactNode;
 }) {
     const user = useCurrentUser();
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
     const [current, setCurrent] = useState('events');
 
     const router = useRouter();
 
-    const items: MenuProps["items"] = [
+    const HEADER_MENUS: MenuProps['items'] = [
         {
-            key: "EditUser",
+            key: 'github',
+            icon: <GithubOutlined />,
             label: (
-                <Link href={`/dashboard/user/edit/${user?._id}`}>
-                    Profile
-                </Link>
+                <a href="https://github.com/zhbh/imark-frontend" target="_blank" rel="noopener noreferrer">
+                    Repository
+                </a>
             ),
         },
         {
-            key: "logout",
+            key: 'feedback',
+            icon: <MailOutlined />,
             label: (
-                <span
-                    onClick={async () => {
+                <a href="https://github.com/zhbh/imark-frontend/issues" target="_blank" rel="noopener noreferrer">
+                    Feedback
+                </a>
+            ),
+        },
+        {
+            label: `${user?.nickName}`,
+            key: 'userMenus',
+            icon: <UserOutlined />,
+            children: [
+                {
+                    label: (
+                        <Link href={`/dashboard/user/edit/${user?._id}`}>
+                            Profile
+                        </Link>
+                    ),
+                    key: 'profile',
+                },
+                {
+                    label: 'Log out',
+                    key: 'logout',
+                    onClick: async () => {
                         await setLogout();
                         localStorage.removeItem("user");
                         router.push("/login");
-                    }}
-                >
-                    Log out
-                </span>
-            ),
+                    }
+                },
+            ],
         },
+
     ];
 
-    const handleMenuClick: MenuProps["onClick"] = ({ key }) => {
+    const handleLeftSideMenuClick: MenuProps["onClick"] = ({ key }) => {
         setCurrent(key);
         router.push(key);
     };
 
     const menusItems = useMemo(() => {
         if (user?.role === USER_ROLE.USER) {
-            return MENUS.filter((item) => {
+            return LEFT_SIDE_MENUS.filter((item) => {
                 if (item.children) {
                     item.children = item.children.filter(
                         (k) => k.role === USER_ROLE.USER
@@ -110,7 +131,7 @@ export default function Layout({ children }: {
                 return item.role === USER_ROLE.USER;
             });
         } else {
-            return MENUS;
+            return LEFT_SIDE_MENUS;
         }
     }, [user]);
 
@@ -122,14 +143,12 @@ export default function Layout({ children }: {
             }}>
                 <div className={styles.logo}></div>
 
-                <Dropdown menu={{ items }} overlayClassName={styles.dropOverlay} className={styles.user}>
-                    <a onClick={(e) => e.preventDefault()}>
-                        <Space>
-                            {user?.nickName}
-                            <DownOutlined />
-                        </Space>
-                    </a>
-                </Dropdown>
+                <Menu
+                    mode="horizontal"
+                    inlineCollapsed={false}
+                    items={HEADER_MENUS}
+                    style={{ display: "flex", justifyContent: "end", flex: 1, minWidth: 0, backgroundColor: "white", }}
+                />
 
             </Header>
             <AntdLayout className={styles.innerSection}>
@@ -138,10 +157,10 @@ export default function Layout({ children }: {
                     <Menu
                         mode="inline"
                         defaultSelectedKeys={["/dashboard/distribution"]}
-                        defaultOpenKeys={["events"]}
+                        // defaultOpenKeys={["events"]}
                         items={menusItems}
                         selectedKeys={[current]}
-                        onClick={handleMenuClick}
+                        onClick={handleLeftSideMenuClick}
                     />
                 </Sider>
 
@@ -150,15 +169,6 @@ export default function Layout({ children }: {
                     <Content className={styles.content}>
                         {children}
                     </Content>
-
-                    <Footer className={styles.footer} style={{ padding: "10px 20px", marginTop: "10px", borderTop: "1px solid #f0f0f0" }}>
-                        <div className={styles.menu}>
-                            <p className={styles.title}>Feedback</p>
-                            <a href="https://github.com/zhbh/imark-frontend/issues" target="_blank" title="GitHub websit">
-                                <img src="./images/github.svg" />GitHub
-                            </a>
-                        </div>
-                    </Footer>
 
                 </AntdLayout>
             </AntdLayout>
