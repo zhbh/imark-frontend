@@ -1,14 +1,16 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { AimOutlined, CheckOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Flex, Form, Input, message, Modal, } from 'antd';
+import { Button, DatePicker, Flex, Form, Input, message, Modal, Select, } from 'antd';
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
-import { EventFormType, EventType } from '@/types';
+import { CategoryType, EventFormType, EventType } from '@/types';
 import dayjs from "dayjs";
-import { addEvent, updateEVent } from '@/api';
+import { addEvent, getCategories, updateEVent } from '@/api';
 import { Content, GoogleMap } from '@/components';
 import { useCurrentUser } from "@/utils/user_info";
+
+const Option = Select.Option;
 
 const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
   const router = useRouter();
@@ -17,6 +19,15 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
   const [form] = Form.useForm();
   const [openMap, setOpenMap] = useState(false);
   const [location, setLocation] = useState("0,0");
+  const [categories, setCategorise] = useState<CategoryType[]>([]);
+
+  useEffect(() => {
+    (async function () {
+      getCategories().then((res) => {
+        setCategorise(res.data);
+      });
+    })();
+  }, []);
 
   useEffect(() => {
     if (editData) {
@@ -105,17 +116,17 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
           <Input placeholder="Please enter your email or phone number" />
         </Form.Item>
 
-        {/* <Form.Item name="category" label="Category" rules={[{ required: true, message: "Category is required", }]}>
+        <Form.Item name="category" label="Category" rules={[{ required: true, message: "Category is required", }]}>
           <Select
             placeholder="Please select a category"
-            options={[
-              { label: 'Sport', value: 'sport' },
-              { label: 'Marketplace', value: 'marketplace' },
-              { label: 'Rental market', value: 'rentalMarket' },
-              { label: 'Job', value: 'job' },
-            ]}
-          />
-        </Form.Item> */}
+            allowClear>
+            {categories.map((category) => (
+              <Option key={category._id} value={category._id}>
+                {category.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
 
         <Form.Item name="expirationTime" label="Expiration Date" rules={[{ required: true, message: "Expiration Date is required", }]}>
           <DatePicker

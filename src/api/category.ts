@@ -2,7 +2,7 @@ import { CategoryType } from "@/types";
 import request from "@/utils/request";
 import qs from "qs";
 
-export const getCategory = () => {
+export const getCategories = () => {
   return request.get(`/api/category`);
 };
 

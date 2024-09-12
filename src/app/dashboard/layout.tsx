@@ -70,6 +70,15 @@ export default function Layout({ children }: {
 
     const HEADER_MENUS: MenuProps['items'] = [
         {
+            key: 'home',
+            icon: <HomeOutlined />,
+            label: (
+                <a href="/">
+                    Home
+                </a>
+            ),
+        },
+        {
             key: 'github',
             icon: <GithubOutlined />,
             label: (

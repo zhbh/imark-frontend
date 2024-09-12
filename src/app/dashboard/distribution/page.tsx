@@ -6,59 +6,11 @@ import { ExclamationCircleFilled, PlusOutlined, SearchOutlined, ClearOutlined, E
 import dayjs from "dayjs";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { EventType } from "@/types";
-import { getEvents, deleteEvent } from "@/api";
+import { CategoryType, EventType } from "@/types";
+import { getEvents, deleteEvent, getCategories } from "@/api";
 import { Content, GoogleMap, PopUpModal } from "@/components";
 
-const columns = [
-    {
-        title: "Title",
-        dataIndex: "title",
-        key: "title",
-        width: 120
-    },
-    {
-        title: "Content",
-        dataIndex: "content",
-        key: "content",
-        ellipsis: true,
-        width: 160,
-        render: (value: string) => {
-            return <Tooltip title={value} placement="topLeft">
-                {value}
-            </Tooltip>
-        },
-    },
-    {
-        title: "Expiration Time",
-        dataIndex: "expirationTime",
-        key: "expirationTime",
-        width: 150,
-        render: (value: string) => dayjs(value).format("DD/MM/YYYY HH:mm"),
-    },
-    {
-        title: "Status",
-        key: "status",
-        dataIndex: "status",
-        width: 100,
-        render: (_: any, row: EventType) => row.expirationTime > Date.now() ? (
-            <Tag color="green"  >
-                In Progress
-            </Tag >
-        ) : (
-            <Tag color="gray"  >
-                Done
-            </Tag >
-        ),
-    },
-    {
-        title: "Dispatch Time",
-        dataIndex: "dispatchTime",
-        key: "dispatchTime",
-        width: 120,
-        render: (value: string) => dayjs(value).format("DD/MM/YYYY"),
-    },
-];
+const Option = Select.Option;
 
 export default function Events() {
     const [form] = Form.useForm();
@@ -73,19 +25,81 @@ export default function Events() {
     });
     const [openMap, setOpenMap] = useState(false);
     const [location, setLocation] = useState("0,0");
+    const [categories, setCategories] = useState<CategoryType[]>([]);
+
+    const COLUMNS = [
+        {
+            title: "Title",
+            dataIndex: "title",
+            key: "title",
+            width: 120
+        },
+        {
+            title: "Content",
+            dataIndex: "content",
+            key: "content",
+            ellipsis: true,
+            width: 160,
+            render: (value: string) => {
+                return <Tooltip title={value} placement="topLeft">
+                    {value}
+                </Tooltip>
+            },
+        },
+        {
+            title: "Category",
+            dataIndex: "category",
+            key: "category",
+            ellipsis: true,
+            width: 100,
+            render: (text: string) =>
+                text ? <Tag color="blue">{categories.find(item => item._id === text)?.name}</Tag> : "-",
+        },
+        {
+            title: "Expiration Time",
+            dataIndex: "expirationTime",
+            key: "expirationTime",
+            width: 150,
+            render: (value: string) => dayjs(value).format("DD/MM/YYYY HH:mm"),
+        },
+        {
+            title: "Status",
+            key: "status",
+            dataIndex: "status",
+            width: 100,
+            render: (_: any, row: EventType) => row.expirationTime > Date.now() ? (
+                <Tag color="green"  >
+                    In Progress
+                </Tag >
+            ) : (
+                <Tag color="gray"  >
+                    Done
+                </Tag >
+            ),
+        },
+        // {
+        //     title: "Dispatch Time",
+        //     dataIndex: "dispatchTime",
+        //     key: "dispatchTime",
+        //     width: 120,
+        //     render: (value: string) => dayjs(value).format("DD/MM/YYYY"),
+        // },
+    ];
 
     const fetchData = useCallback(
         (search?: EventType) => {
-            const { title, content } = search || {};
+            const { title, content, category } = search || {};
             setLoading(true);
             getEvents({
                 current: pagination.current as number,
                 pageSize: pagination.pageSize as number,
                 title,
                 content,
+                category,
             }).then((res) => {
                 setLoading(false);
                 setList(res.data);
+                console.log("🚀 ~ Events ~ res.data:", res.data)
                 setTotal(res.total);
             });
 
@@ -100,6 +114,14 @@ export default function Events() {
     const handleEventAdd = () => {
         router.push("/dashboard/distribution/add");
     };
+
+    useEffect(() => {
+        (async function () {
+            getCategories().then((res) => {
+                setCategories(res.data);
+            });
+        })();
+    }, []);
 
     const handleDeleteModal = (data: EventType) => {
         Modal.confirm({
@@ -195,19 +217,33 @@ export default function Events() {
                 onFinish={handleSearch}
             >
                 <Row gutter={24}>
-                    <Col span={5}>
+                    <Col span={4}>
                         <Form.Item name="title" label="Title">
                             <Input placeholder="Please input" />
                         </Form.Item>
                     </Col>
 
-                    <Col span={8}>
+                    <Col span={5}>
                         <Form.Item name="content" label="Content">
                             <Input placeholder="Please input" />
                         </Form.Item>
                     </Col>
 
-                    <Col span={9} style={{ textAlign: "left" }}>
+                    <Col span={5}>
+                        <Form.Item name="category" label="Category">
+                            <Select
+                                placeholder="Please select a category"
+                                allowClear>
+                                {categories.map((category) => (
+                                    <Option key={category._id} value={category._id}>
+                                        {category.name}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+
+                    <Col span={8} style={{ textAlign: "left" }}>
                         <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
                             Search
                         </Button>
@@ -230,7 +266,7 @@ export default function Events() {
                     rowKey="_id"
                     showHeader={true}
                     loading={loading}
-                    columns={[...columns, operations]}
+                    columns={[...COLUMNS, operations]}
                     dataSource={list}
                     onChange={handleTableChange}
                     tableLayout="fixed"

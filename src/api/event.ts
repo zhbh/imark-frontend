@@ -3,10 +3,11 @@ import request from "@/utils/request";
 import qs from "qs";
 
 export const getEvents = (
-    params: Partial<Pick<EventType, "title" | "content">> & {
+    params: Partial<Pick<EventType, "title" | "content" | "category">> & {
         current?: number;
         pageSize?: number;
         all?: boolean;
+        category?: string;
     }
 ) => {
     return request.get(`/api/event?${qs.stringify(params)}`);
