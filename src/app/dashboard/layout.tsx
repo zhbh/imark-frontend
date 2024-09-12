@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { DownOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Layout as AntdLayout, Menu, Dropdown, Space, message, Flex } from "antd";
 import styles from "./page.module.css";

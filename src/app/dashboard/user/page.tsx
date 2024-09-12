@@ -5,7 +5,7 @@ import { Auth, Content } from "@/components";
 import { USER_ROLE, USER_STATUS } from "@/constants";
 import { UserQueryType, UserType } from "@/types";
 import { useCurrentUser } from "@/utils/user_info";
-import { ExclamationCircleFilled } from "@ant-design/icons";
+import { ExclamationCircleFilled, PlusOutlined, SearchOutlined, ClearOutlined, EditOutlined, DeleteOutlined, StopOutlined } from "@ant-design/icons";
 import {
   Button, Col, Form, Input, Modal, Row, Select, Space, Table, TablePaginationConfig, Tag, message,
 } from "antd";
@@ -79,6 +79,7 @@ export default function Book() {
         <Space>
           <Button
             type="link"
+            icon={<EditOutlined />}
             onClick={() => {
               router.push(`/dashboard/user/edit/${row._id}`);
             }}
@@ -88,6 +89,7 @@ export default function Book() {
           <Button
             type="link"
             danger={row.status === USER_STATUS.ON}
+            icon={<StopOutlined />}
             onClick={() => {
               handleUpdateStatus(row);
             }}
@@ -97,6 +99,7 @@ export default function Book() {
           <Button
             type="link"
             danger
+            icon={<DeleteOutlined />}
             onClick={() => {
               handleDeleteModal(row as UserType);
             }}
@@ -168,7 +171,7 @@ export default function Book() {
         <Content
           title="Users"
           operation={
-            <Button type="primary" size="small" onClick={handleAdd}>
+            <Button type="primary" size="small" icon={<PlusOutlined />}onClick={handleAdd}>
               Add User
             </Button>
           }
@@ -202,11 +205,12 @@ export default function Book() {
               </Col>
 
               <Col span={9} style={{ textAlign: "left" }}>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
                   Search
                 </Button>
                 <Button
                   style={{ margin: "0 8px" }}
+                  icon={<ClearOutlined />}
                   onClick={() => {
                     form.resetFields();
                     fetchData();

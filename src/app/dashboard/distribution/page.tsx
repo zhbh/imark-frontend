@@ -2,7 +2,7 @@
 
 import styles from "./page.module.css";
 import { Form, Table, Space, Tag, TableProps, Tooltip, TablePaginationConfig, Modal, message, Button, Row, Col, Input, Select } from "antd";
-import { ExclamationCircleFilled } from "@ant-design/icons";
+import { ExclamationCircleFilled, PlusOutlined, SearchOutlined, ClearOutlined, EditOutlined, DeleteOutlined, AimOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -136,6 +136,7 @@ export default function Events() {
                 <Button
                     type="link"
                     block
+                    icon={<AimOutlined />}
                     onClick={() => {
                         setOpenMap(true);
                         setLocation(row.location);
@@ -147,6 +148,7 @@ export default function Events() {
                 <Button
                     type="link"
                     block
+                    icon={<EditOutlined />}
                     onClick={() => {
                         router.push(`/dashboard/distribution/edit/${row._id}`);
                     }}
@@ -157,6 +159,7 @@ export default function Events() {
                     type="link"
                     danger
                     block
+                    icon={<DeleteOutlined />}
                     onClick={() => {
                         handleDeleteModal(row as EventType);
                     }}
@@ -179,7 +182,7 @@ export default function Events() {
         <Content
             title="Events"
             operation={
-                <Button type="primary" size="small" onClick={handleEventAdd}>
+                <Button type="primary" size="small" icon={<PlusOutlined />} onClick={handleEventAdd}>
                     Add Event
                 </Button>
             }
@@ -205,11 +208,12 @@ export default function Events() {
                     </Col>
 
                     <Col span={9} style={{ textAlign: "left" }}>
-                        <Button type="primary" htmlType="submit">
+                        <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
                             Search
                         </Button>
                         <Button
                             style={{ margin: "0 8px" }}
+                            icon={<ClearOutlined />}
                             onClick={() => {
                                 form.resetFields();
                                 fetchData();

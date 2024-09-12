@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { AimOutlined } from '@ant-design/icons';
-import { Alert, Button, DatePicker, Flex, Form, Input, message, Modal, Select, Space, Typography } from 'antd';
+import { AimOutlined, CheckOutlined } from '@ant-design/icons';
+import { Button, DatePicker, Flex, Form, Input, message, Modal, } from 'antd';
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
 import { EventFormType, EventType } from '@/types';
@@ -146,7 +146,7 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
 
         <Form.Item wrapperCol={{ offset: 6 }}>
           <Flex gap="small">
-            <Button type="primary" htmlType="submit" >
+            <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
               Submit
             </Button>
           </Flex>

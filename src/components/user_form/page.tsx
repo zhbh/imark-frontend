@@ -5,7 +5,8 @@ import { Content } from "@/components";
 import { USER_ROLE, USER_SEX, USER_STATUS } from "@/constants";
 import { UserFormProps, UserType } from "@/types";
 import { useCurrentUser } from "@/utils/user_info";
-import { Button, Flex, Form, Input, Radio, message } from "antd";
+import { Button, Form, Input, Radio, message } from "antd";
+import { CheckOutlined } from '@ant-design/icons';
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -124,12 +125,13 @@ const UserForm: React.FC<UserFormProps> = ({
             </Radio.Group>
           </Form.Item>
 
-          <Form.Item colon={false} wrapperCol={{ offset: 4 }}>
+          <Form.Item colon={false} wrapperCol={{ offset: 5 }}>
             <Button
               type="primary"
               htmlType="submit"
               size="large"
               className={styles.btn}
+              icon={<CheckOutlined />}
             >
               {editData?._id ? "Update" : "Create"}
             </Button>

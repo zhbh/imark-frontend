@@ -13,16 +13,16 @@ import {
   Space,
   Table,
   TablePaginationConfig,
-  Tag,
   message,
 } from "antd";
 import dayjs from "dayjs";
 import { useCallback, useEffect, useState } from "react";
-
+import { PlusOutlined, SearchOutlined, ClearOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import styles from "./page.module.css";
 import { CategoryQueryType, CategoryType } from "@/types";
-
-const Option = Select.Option;
+import request from "@/utils/request";
+import qs from "qs";
+import { addCategory, deleteCategory, updateCategory } from "@/api";
 
 const COLUMNS = [
   {
@@ -33,16 +33,6 @@ const COLUMNS = [
     width: 160,
   },
   {
-    title: "Category",
-    dataIndex: "category",
-    key: "category",
-    ellipsis: true,
-    width: 200,
-    render: (text: { name: string }) => {
-      return text?.name ?? "-";
-    },
-  },
-  {
     title: "Created Time",
     dataIndex: "createdTime",
     key: "createdTime",
@@ -51,7 +41,7 @@ const COLUMNS = [
   },
 ];
 
-export default function Book() {
+export default function Category() {
   const [form] = Form.useForm();
   const [isModalOpen, setModalOpen] = useState(false);
   const [list, setList] = useState<CategoryType[]>([]);
@@ -74,6 +64,7 @@ export default function Book() {
           <Button
             type="link"
             block
+            icon={<EditOutlined />}
             onClick={() => {
               setModalOpen(true);
               setEditData(row);
@@ -85,8 +76,9 @@ export default function Book() {
             type="link"
             danger
             block
+            icon={<DeleteOutlined />}
             onClick={() => {
-              handleDeleteModal(row._id as string);
+              handleDeleteModal(row);
             }}
           >
             Delete
@@ -98,7 +90,21 @@ export default function Book() {
 
   const fetchData = useCallback(
     (search?: CategoryQueryType) => {
-      // to do
+      const { name, level } = search || {};
+
+      request
+        .get(
+          `/api/category?${qs.stringify({
+            current: pagination.current,
+            pageSize: pagination.pageSize,
+            name,
+            level,
+          })}`
+        )
+        .then((res) => {
+          setList(res.data);
+          setTotal(res.total);
+        });
     },
     [pagination]
   );
@@ -108,7 +114,15 @@ export default function Book() {
   }, [fetchData, pagination]);
 
   const handleEditCategoryFinish = async (values: CategoryType) => {
-    //to do
+    if (editData._id) {
+      await updateCategory(editData._id, values);
+      message.success("Edit the category successfully!");
+    } else {
+      await addCategory(values);
+      message.success("Create the category successfully!");
+    }
+    fetchData();
+    handleCancel();
   };
 
   const handleOk = async () => {
@@ -120,14 +134,14 @@ export default function Book() {
     setModalOpen(false);
   };
 
-  const handleDeleteModal = (id: string) => {
+  const handleDeleteModal = (row: CategoryType) => {
     Modal.confirm({
-      title: "Confirm to delete?",
+      title: `Confirm to delete the category ${row.name}?`,
       icon: <ExclamationCircleFilled />,
       okText: "Confirm",
       cancelText: "Cancel",
       async onOk() {
-        //to do
+        await deleteCategory(row._id as string);
         message.success("Delete successfully!");
         fetchData(form.getFieldsValue());
       },
@@ -155,7 +169,10 @@ export default function Book() {
         <Content
           title="Category"
           operation={
-            <Button type="primary" onClick={handleAddCategory}>
+            <Button
+              type="primary"
+              onClick={handleAddCategory}
+              icon={<PlusOutlined />}>
               Add Category
             </Button>
           }
@@ -175,24 +192,19 @@ export default function Book() {
                 </Form.Item>
               </Col>
 
-              <Col span={5}>
-                <Form.Item name="category" label="Category">
-                  <Select
-                    allowClear
-                    placeholder="Please select a category"
-                  // options={} todo
-                  ></Select>
-                </Form.Item>
-              </Col>
-
               <Col span={9} style={{ textAlign: "left" }}>
-                <Button type="primary" htmlType="submit">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  icon={<SearchOutlined />}>
                   Search
                 </Button>
                 <Button
                   style={{ margin: "0 8px" }}
+                  icon={<ClearOutlined />}
                   onClick={() => {
                     form.resetFields();
+                    fetchData();
                   }}
                 >
                   Clear
@@ -218,7 +230,7 @@ export default function Book() {
 
           {isModalOpen && (
             <Modal
-              title={editData._id ? "Edit Category" : "Create Category"}
+              title={editData._id ? "Edit Category" : "Add Category"}
               open={isModalOpen}
               onOk={handleOk}
               okText="Confirm"
