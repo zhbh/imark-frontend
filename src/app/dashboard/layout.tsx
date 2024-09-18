@@ -5,7 +5,7 @@ import type { MenuProps } from "antd";
 import { Layout as AntdLayout, Menu, Dropdown, Space, message, Flex } from "antd";
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
-import { HomeOutlined, UserOutlined, ClusterOutlined, GithubOutlined, MailOutlined } from '@ant-design/icons';
+import { HomeOutlined, UserOutlined, ClusterOutlined, GithubOutlined, MailOutlined, HeartOutlined } from '@ant-design/icons';
 import { useCurrentUser } from "@/utils/user_info";
 import Link from "next/link";
 import { setLogout } from "@/api";
@@ -55,6 +55,12 @@ const LEFT_SIDE_MENUS = [
         icon: <ClusterOutlined />,
         key: "/dashboard/category",
         role: USER_ROLE.ADMIN,
+    },
+    {
+        label: "Favorite Management",
+        icon: <HeartOutlined />,
+        key: "/dashboard/favorite",
+        role: USER_ROLE.USER,
     }
 ];
 

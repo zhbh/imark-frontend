@@ -6,7 +6,7 @@ import { USER_ROLE, USER_SEX, USER_STATUS } from "@/constants";
 import { UserFormProps, UserType } from "@/types";
 import { useCurrentUser } from "@/utils/user_info";
 import { Button, Form, Input, Radio, message } from "antd";
-import { CheckOutlined } from '@ant-design/icons';
+import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -131,7 +131,7 @@ const UserForm: React.FC<UserFormProps> = ({
               htmlType="submit"
               size="large"
               className={styles.btn}
-              icon={<CheckOutlined />}
+              icon={editData?._id ? <EditOutlined /> : <PlusOutlined />}
             >
               {editData?._id ? "Update" : "Create"}
             </Button>

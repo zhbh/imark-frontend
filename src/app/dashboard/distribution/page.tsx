@@ -39,7 +39,7 @@ export default function Events() {
             dataIndex: "content",
             key: "content",
             ellipsis: true,
-            width: 160,
+            width: 200,
             render: (value: string) => {
                 return <Tooltip title={value} placement="topLeft">
                     {value}
@@ -51,7 +51,7 @@ export default function Events() {
             dataIndex: "category",
             key: "category",
             ellipsis: true,
-            width: 100,
+            width: 120,
             render: (text: string) =>
                 text ? <Tag color="blue">{categories.find(item => item._id === text)?.name}</Tag> : "-",
         },
@@ -66,7 +66,7 @@ export default function Events() {
             title: "Status",
             key: "status",
             dataIndex: "expirationTime",
-            width: 200,
+            width: 120,
             render: (_: any, row: EventType) => dayjs(row.expirationTime).isAfter(dayjs(Date.now())) ? (
                 <Tag color="green"  >
                     In Progress
