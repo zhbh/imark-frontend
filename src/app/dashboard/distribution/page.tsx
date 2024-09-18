@@ -65,9 +65,9 @@ export default function Events() {
         {
             title: "Status",
             key: "status",
-            dataIndex: "status",
-            width: 100,
-            render: (_: any, row: EventType) => row.expirationTime > Date.now() ? (
+            dataIndex: "expirationTime",
+            width: 200,
+            render: (_: any, row: EventType) => dayjs(row.expirationTime).isAfter(dayjs(Date.now())) ? (
                 <Tag color="green"  >
                     In Progress
                 </Tag >
@@ -162,7 +162,6 @@ export default function Events() {
                     onClick={() => {
                         setOpenMap(true);
                         setLocation(row.location);
-                        console.log("🚀 ~ Events ~ row.location:", row.location)
                     }}
                 >
                     View

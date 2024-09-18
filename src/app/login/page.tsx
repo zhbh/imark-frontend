@@ -6,6 +6,7 @@ import classnames from "classnames";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
 import { UserLoginType } from "@/types";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 import styles from "./page.module.css";
 import Link from "next/link";
@@ -77,10 +78,15 @@ export default function Login() {
                 Log in
               </Button>
             </Form.Item>
-            
+
           </Form>
 
-          <Flex justify="flex-end">
+          <Flex justify="space-between">
+            <Button type="link"
+              icon={<ArrowLeftOutlined />}
+              onClick={() => router.push("/")
+              } />
+
             <Link href="/register">
               Sign up
             </Link>

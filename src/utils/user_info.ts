@@ -6,7 +6,6 @@ export const useCurrentUser = () => {
   useEffect(() => {
     const obj = localStorage.getItem("user");
     if (obj) {
-      console.log("🚀 ~ useEffect ~ obj:", obj)
       setUser(JSON.parse(obj));
     }
   }, []);

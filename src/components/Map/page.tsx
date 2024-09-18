@@ -47,7 +47,7 @@ const GoogleMap: React.FC<
 
             setLocations([
                 { key: "selectLocation", location: { lat: latValue, lng: lngValue } }]);
-            console.log("🚀 ~ locations:", latlng.split(","))
+            
             setLat(latValue);
             setLng(lngValue);
 
@@ -83,9 +83,7 @@ const GoogleMap: React.FC<
                 defaultZoom={13}
                 mapId={AppConfig.mapId}
                 defaultCenter={{ lat: lat, lng: lng }}
-                center={{ lat: lat, lng: lng }}
                 onClick={(ev: MapMouseEvent) => {
-                    console.log("🚀 ~ GoogleMap ~ ev:", ev.detail.latLng)
                     const latValue = ev.detail.latLng?.lat ?? lat;
                     const lngValue = ev.detail.latLng?.lng ?? lng;
                     setLocations([

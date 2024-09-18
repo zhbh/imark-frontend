@@ -171,7 +171,7 @@ export default function Book() {
         <Content
           title="Users"
           operation={
-            <Button type="primary" size="small" icon={<PlusOutlined />}onClick={handleAdd}>
+            <Button type="primary" size="small" icon={<PlusOutlined />} onClick={handleAdd}>
               Add User
             </Button>
           }

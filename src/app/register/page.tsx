@@ -4,6 +4,7 @@ import request from "@/utils/request";
 import { Button, Flex, Form, Input, message, Radio } from "antd";
 import classnames from "classnames";
 import Head from "next/head";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 import styles from "./page.module.css";
 import Link from "next/link";
@@ -129,11 +130,17 @@ export default function Register() {
 
           </Form>
 
-          <Flex justify="flex-end">
+          <Flex justify="space-between">
+            <Button type="link"
+              icon={<ArrowLeftOutlined />}
+              onClick={() => router.push("/")
+              } />
+
             <Link href="/login">
               Log in
             </Link>
           </Flex>
+
         </div>
       </main>
     </>

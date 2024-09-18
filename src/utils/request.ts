@@ -58,6 +58,7 @@ export const CreateAxiosInstance = (
       if (status === 200) {
         return data;
       } else if (status === 401) {
+        localStorage.removeItem("user");
         window.location.href = "/login";
         // return redirect("/login");
       } else if (status === 501) {
@@ -70,8 +71,8 @@ export const CreateAxiosInstance = (
     function (error) {
       if (error.response) {
         if (error.response.status === 401) {
+          localStorage.removeItem("user");
           window.location.href = "/login";
-          // return Router.redirect("/login");
         } else if (error.response.status === 501) {
           window.location.href = "/dashboard";
         }
