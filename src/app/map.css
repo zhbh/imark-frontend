@@ -206,27 +206,6 @@ body {
     background-size: 100%;
 }
 
-.marketplace-icon {
-    width: 22px;
-    height: 22px;
-    background: url(../../public/images/marketplace.png) no-repeat center;
-    background-size: 100%;
-}
-
-.job-icon {
-    width: 22px;
-    height: 22px;
-    background: url(../../public/images/job.png) no-repeat center;
-    background-size: 100%;
-}
-
-.rentalmarket-icon {
-    width: 22px;
-    height: 22px;
-    background: url(../../public/images/rentalmarket.png) no-repeat center;
-    background-size: 100%;
-}
-
 .card {
     background-color: '#7dc5eb';
 }

@@ -13,18 +13,22 @@ import { useCurrentUser } from "@/utils/user_info";
 import { CategoryType, EventType } from "@/types";
 import { getCategories, getEvents } from "@/api";
 
-import { HeartOutlined, ShareAltOutlined, } from "@ant-design/icons";
+import { HeartOutlined, UserOutlined, UserAddOutlined, BarChartOutlined } from "@ant-design/icons";
 
 import dayjs from "dayjs";
 import { FacebookIcon, FacebookShareButton, TwitterShareButton, XIcon } from "react-share";
+import { EventList } from "@/components";
 
 type iMark = { event: EventType, location: google.maps.LatLngLiteral }
 
 export default function Home() {
+  const shareLink = window.location.origin;
   const user = useCurrentUser();
 
-  const [lat, setLat] = useState(0);
-  const [lng, setLng] = useState(0);
+  const defaultCenter = {
+    lat: 0,
+    lng: 0,
+  };
 
   const [list, setList] = useState<EventType[]>([]);
   const [total, setTotal] = useState(0);
@@ -37,6 +41,7 @@ export default function Home() {
   const [categories, setCategories] = useState<CategoryType[]>([]);
 
   const [marks, setMarks] = useState<iMark[]>([]);
+  const [mapCenter, setMapCenter] = useState(defaultCenter);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -44,8 +49,7 @@ export default function Home() {
         const latValue = position.coords.latitude;
         const lngValue = position.coords.longitude;
 
-        setLat(latValue);
-        setLng(lngValue);
+        setMapCenter({ lat: latValue, lng: lngValue });
       }
     );
   }, []);
@@ -66,75 +70,57 @@ export default function Home() {
 
         all: true
       }).then((res) => {
-        setList(res.data);
-        setTotal(res.total);
+        const data = res.data.filter((item: EventType) => dayjs(item.expirationTime).isAfter(dayjs(Date.now())));
 
-        res.data.map((item: EventType) => {
-          if (dayjs(item.expirationTime).isBefore(dayjs(Date.now()))) return;
-
+        data.map((item: EventType) => {
           var geoArr = item.location.split(',');
           var lat = parseFloat(geoArr[0]);
           var lng = parseFloat(geoArr[1]);
           marks.push(
             { event: item, location: { lat: lat, lng: lng } });
+
+          return item;
         });
 
-      });
+        setList(data);
+        setTotal(data.total);
+
+      }).finally(() => setTimeout(fetchData, 10000));
 
     },
     [pagination]
   );
 
   const buildContent = (event: EventType) => {
-    const category = categories.find(item => item._id === event.category)?.name?.toLowerCase().replace(/\s+/g, '');
+    const category = categories.find(item => item._id === event.category);
+    const categoryIcon = category?.icon;
 
-    let markBgColor = "";
     const content = document.createElement("div");
-
-    switch (category) {
-      case 'sports':
-        markBgColor = "#aad08f";
-        break;
-      case 'job':
-        markBgColor = "#17abe3";
-        break;
-      case 'marketplace':
-        markBgColor = "#e89abe";
-        break;
-      default:
-        markBgColor = "#efb336";
-        break;
-    }
-
     content.innerHTML = `
-      <div class="icon ${category}-icon"></div>
+      <div class="${categoryIcon}-icon"></div>
       `;
-    return { content, markBgColor };
+    return { content, category };
   }
 
   const Markers = (props: { marks: iMark[] }) => {
     return (
       <>
         {props.marks.map((mark: iMark) => {
-          const imark = buildContent(mark.event);
-
+          const imarkObj = buildContent(mark.event);
           const [markerRef, marker] = useAdvancedMarkerRef();
-
           const [infoWindowShown, setInfoWindowShown] = useState(false);
-
           const handleMarkerClick = useCallback(
             () => setInfoWindowShown(isShown => !isShown),
             []
           );
-
           const handleClose = useCallback(() => setInfoWindowShown(false), []);
 
           const actions: React.ReactNode[] = [
-            <FacebookShareButton url={'http://localhost:3000/'}>
+            <FacebookShareButton url={shareLink}>
               <FacebookIcon size={18} round />
             </FacebookShareButton>,
             <TwitterShareButton
-              url={'http://localhost:3000/'}
+              url={shareLink}
               title={mark.event.title}
             >
               <XIcon size={18} round />
@@ -151,8 +137,8 @@ export default function Home() {
               onClick={handleMarkerClick}
             >
               <Pin
-                glyph={imark.content}
-                background={imark.markBgColor}
+                glyph={imarkObj.content}
+                background={imarkObj.category?.color}
                 borderColor={"#594d9c"}
               />
               {infoWindowShown && (
@@ -201,32 +187,36 @@ export default function Home() {
               <Row gutter={10}>
                 <Col>
                   <Link href={`/login`}>
-                    Log in
+                    <UserOutlined /> Log in
                   </Link>
                 </Col>
                 <Col >
                   <Link href={`/register`}>
-                    Sign up
+                    <UserAddOutlined /> Sign up
                   </Link>
                 </Col>
               </Row>
             ) : (
               <Link href={`/dashboard`}>
-                Dashboard
+                <BarChartOutlined /> Dashboard
               </Link>
             )
           }
         </div>
 
       </Header>
+
       <Content title={"Map"} >
-        <APIProvider apiKey={AppConfig.googleMapApiKey} onLoad={() => console.log("Maps API has loaded.")}>
+        <APIProvider apiKey={AppConfig.googleMapApiKey} onLoad={() => {
+
+        }}>
 
           <Map
             className={styles.map}
             defaultZoom={13}
+            id={"map-id"}
             mapId={AppConfig.mapId}
-            defaultCenter={{ lat: lat, lng: lng }}
+            defaultCenter={mapCenter}
             gestureHandling="greedy"
             streetViewControl={false}
             onClick={(ev: MapMouseEvent) => {
@@ -237,10 +227,9 @@ export default function Home() {
             }>
             <Markers marks={marks} />
           </Map>
+          <EventList events={list} categories={categories}></EventList>
         </APIProvider>
       </Content>
     </Layout>
-
-
   );
 }

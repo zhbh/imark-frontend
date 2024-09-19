@@ -26,6 +26,7 @@ export default function Events() {
     const [openMap, setOpenMap] = useState(false);
     const [location, setLocation] = useState("0,0");
     const [categories, setCategories] = useState<CategoryType[]>([]);
+    const [category, setCategory] = useState<CategoryType>();
 
     const COLUMNS = [
         {
@@ -99,7 +100,6 @@ export default function Events() {
             }).then((res) => {
                 setLoading(false);
                 setList(res.data);
-                console.log("🚀 ~ Events ~ res.data:", res.data)
                 setTotal(res.total);
             });
 
@@ -162,6 +162,7 @@ export default function Events() {
                     onClick={() => {
                         setOpenMap(true);
                         setLocation(row.location);
+                        setCategory(categories.find(item => item._id === row.category));
                     }}
                 >
                     View
@@ -282,6 +283,7 @@ export default function Events() {
                 onOk={handleOk}
                 onCancel={handleCancel}
                 latlng={location}
+                category={category}
                 cancelButtonProps={{ disabled: true }}
             ></GoogleMap>
         </Content>

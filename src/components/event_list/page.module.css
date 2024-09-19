@@ -1,0 +1,10 @@
+.listContent {
+    left: 0;
+    bottom: 0;
+    z-index: 100;
+    width: "30%";
+    background-Color: "#ffffff";
+    margin: "10px";
+    padding: "10px";
+    border-Radius: "10px";
+}
