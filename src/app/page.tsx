@@ -85,7 +85,8 @@ export default function Home() {
         setList(data);
         setTotal(data.total);
 
-      }).finally(() => setTimeout(fetchData, 10000));
+      });
+      // .finally(() => setTimeout(fetchData, 10000));
 
     },
     [pagination]
@@ -219,6 +220,7 @@ export default function Home() {
             defaultCenter={mapCenter}
             gestureHandling="greedy"
             streetViewControl={false}
+            fullscreenControl={false}
             onClick={(ev: MapMouseEvent) => {
 
             }}

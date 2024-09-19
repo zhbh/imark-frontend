@@ -75,7 +75,8 @@ const genPresets = (presets = presetPalettes) =>
   }));
 
 export default function Category() {
-  const [form] = Form.useForm();
+  const [searchForm] = Form.useForm();
+  const [categoryForm] = Form.useForm();
   const [isModalOpen, setModalOpen] = useState(false);
   const [list, setList] = useState<CategoryType[]>([]);
   const [total, setTotal] = useState(0);
@@ -110,7 +111,7 @@ export default function Category() {
             onClick={() => {
               setModalOpen(true);
               setEditData(row);
-              form.setFieldsValue(row);
+              categoryForm.setFieldsValue(row);
             }}
           >
             Edit
@@ -172,7 +173,7 @@ export default function Category() {
   };
 
   const handleOk = async () => {
-    form.submit();
+    categoryForm.submit();
   };
 
   const handleCancel = () => {
@@ -189,7 +190,7 @@ export default function Category() {
       async onOk() {
         await deleteCategory(row._id as string);
         message.success("Delete successfully!");
-        fetchData(form.getFieldsValue());
+        fetchData(categoryForm.getFieldsValue());
       },
     });
   };
@@ -204,9 +205,7 @@ export default function Category() {
 
   const handleAddCategory = () => {
     setModalOpen(true);
-    setTimeout(() => {
-      form.resetFields();
-    });
+    setTimeout(() => categoryForm.resetFields());
   };
 
   const customPanelRender: ColorPickerProps["panelRender"] = (
@@ -239,7 +238,7 @@ export default function Category() {
           }
         >
           <Form
-            form={form}
+            form={searchForm}
             name="search"
             className={styles.form}
             style={{ margin: "10px 0 0 10px" }}
@@ -264,7 +263,7 @@ export default function Category() {
                   style={{ margin: "0 8px" }}
                   icon={<ClearOutlined />}
                   onClick={() => {
-                    form.resetFields();
+                    searchForm.resetFields();
                     fetchData();
                   }}
                 >
@@ -300,7 +299,7 @@ export default function Category() {
             >
               <Form
                 name="category"
-                form={form}
+                form={categoryForm}
                 labelCol={{ span: 4 }}
                 wrapperCol={{ span: 20 }}
                 style={{ maxWidth: 600 }}
