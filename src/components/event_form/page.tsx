@@ -15,11 +15,11 @@ const Option = Select.Option;
 const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
   const router = useRouter();
   const user = useCurrentUser();
-  const [modal, contextHolder] = Modal.useModal();
   const [form] = Form.useForm();
   const [openMap, setOpenMap] = useState(false);
   const [location, setLocation] = useState("0,0");
   const [categories, setCategorise] = useState<CategoryType[]>([]);
+  const [category, setCategory] = useState<CategoryType>();
 
   useEffect(() => {
     (async function () {
@@ -32,6 +32,7 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
   useEffect(() => {
     if (editData) {
       setLocation(editData.location);
+      setCategory(categories.find(item => editData._id));
     } else {
       navigator.geolocation.getCurrentPosition(
         (position: GeolocationPosition) => {
@@ -119,7 +120,9 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
         <Form.Item name="category" label="Category" rules={[{ required: true, message: "Category is required", }]}>
           <Select
             placeholder="Please select a category"
-            allowClear>
+            allowClear
+            onChange={value => setCategory(value)}
+          >
             {categories.map((category) => (
               <Option key={category._id} value={category._id}>
                 {category.name}
@@ -149,6 +152,7 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
           latlng={location}
           onOk={handleOk}
           onCancel={handleCancel}
+          category={category}
           callBack={(location) => {
             setLocation(location);
           }}

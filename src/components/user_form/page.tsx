@@ -64,20 +64,20 @@ const UserForm: React.FC<UserFormProps> = ({
           autoComplete="off"
         >
           <Form.Item
-            label="Account"
+            label="Username"
             extra="Using the username to log in"
             name="name"
             rules={[
               {
-                required: true,
+                required: isEdit ? false : true,
                 message: "Please input the username",
               },
             ]}
           >
-            <Input placeholder="Please input the username" />
+            <Input disabled={isEdit ? true : false} placeholder="Please input the username" />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             label="Nickname"
             extra="Display name"
             name="nickName"
@@ -89,19 +89,49 @@ const UserForm: React.FC<UserFormProps> = ({
             ]}
           >
             <Input placeholder="Please input the nickname" />
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item
             label="Password"
             name="password"
             rules={[
               {
-                required: isEdit ? false : true,
+                required: true,
                 message: "Please input the password",
               },
+              ({
+                validator(_, value) {
+                  var pwdRegex = new RegExp('(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z0-9]).{8,30}');
+                  if (pwdRegex.test(value)) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error("Must contain one number, one upper letter, one lower letter and one special character, at least 8 charaters"));
+                },
+              }),
             ]}
           >
             <Input.Password placeholder="Please input the password" type="password" />
+          </Form.Item>
+
+          <Form.Item
+            name="confirmPassword"
+            label={<span className={styles.label}>Confirm Password</span>}
+            rules={[
+              {
+                required: true,
+                message: "Please input the confirm password",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error("The new password that you entered do not match!"));
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder="Please input your password" />
           </Form.Item>
 
           <Form.Item label="Gender" name="sex">

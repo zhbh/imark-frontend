@@ -19,19 +19,19 @@ const Option = Select.Option;
 
 const COLUMNS = [
   {
-    title: "Account",
+    title: "Username",
     dataIndex: "name",
     key: "name",
     ellipsis: true,
     width: 140,
   },
-  {
-    title: "Username",
-    dataIndex: "nickName",
-    key: "nickName",
-    ellipsis: true,
-    width: 140,
-  },
+  // {
+  //   title: "Username",
+  //   dataIndex: "nickName",
+  //   key: "nickName",
+  //   ellipsis: true,
+  //   width: 140,
+  // },
   {
     title: "Status",
     dataIndex: "status",

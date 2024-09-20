@@ -69,6 +69,7 @@ export default function Layout({ children }: {
     children: React.ReactNode;
 }) {
     const user = useCurrentUser();
+
     const [collapsed, setCollapsed] = useState(true);
     const [current, setCurrent] = useState('events');
 
@@ -103,7 +104,7 @@ export default function Layout({ children }: {
             ),
         },
         {
-            label: `${user?.nickName}`,
+            label: `${user?.name}`,
             key: 'userMenus',
             icon: <UserOutlined />,
             children: [
@@ -121,7 +122,7 @@ export default function Layout({ children }: {
                     onClick: async () => {
                         await setLogout();
                         localStorage.removeItem("user");
-                        router.push("/login");
+                        router.push("/");
                     }
                 },
             ],

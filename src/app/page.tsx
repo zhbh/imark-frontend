@@ -1,20 +1,18 @@
 "use client";
 
-import { AdvancedMarker, APIProvider, InfoWindow, Map, MapCameraChangedEvent, MapMouseEvent, Pin, useAdvancedMarkerRef } from "@vis.gl/react-google-maps";
-import { Button, Card, Col, Flex, Layout, Row, TablePaginationConfig } from "antd";
+import { AdvancedMarker, APIProvider, InfoWindow, Map, MapCameraChangedEvent, MapMouseEvent, Pin, useAdvancedMarkerRef, useMap } from "@vis.gl/react-google-maps";
+import { Button, Card, Col, Layout, Row, TablePaginationConfig } from "antd";
 import AppConfig from "../../app.config";
 import { useCallback, useEffect, useState } from "react";
 import styles from "./page.module.css";
 import "./map.css";
 import Link from "next/link";
 import { Header, Content } from "antd/es/layout/layout";
-import { USER_ROLE } from "@/constants";
 import { useCurrentUser } from "@/utils/user_info";
 import { CategoryType, EventType } from "@/types";
-import { getCategories, getEvents } from "@/api";
-
-import { HeartOutlined, UserOutlined, UserAddOutlined, BarChartOutlined } from "@ant-design/icons";
-
+import { getCategories, getEvents, setLogout } from "@/api";
+import { HeartOutlined, UserOutlined, UserAddOutlined, BarChartOutlined, LogoutOutlined } from "@ant-design/icons";
+import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import { FacebookIcon, FacebookShareButton, TwitterShareButton, XIcon } from "react-share";
 import { EventList } from "@/components";
@@ -24,6 +22,7 @@ type iMark = { event: EventType, location: google.maps.LatLngLiteral }
 export default function Home() {
   const shareLink = window.location.origin;
   const user = useCurrentUser();
+  const router = useRouter();
 
   const defaultCenter = {
     lat: 0,
@@ -42,6 +41,8 @@ export default function Home() {
 
   const [marks, setMarks] = useState<iMark[]>([]);
   const [mapCenter, setMapCenter] = useState(defaultCenter);
+
+  const mapControl = useMap("map-id");
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -67,7 +68,9 @@ export default function Home() {
       getEvents({
         current: pagination.current as number,
         pageSize: pagination.pageSize as number,
-
+        title: search?.title,
+        content: search?.contact,
+        category: search?.category,
         all: true
       }).then((res) => {
         const data = res.data.filter((item: EventType) => dayjs(item.expirationTime).isAfter(dayjs(Date.now())));
@@ -185,7 +188,7 @@ export default function Home() {
         <div className={styles.menus}>
           {
             user == null ? (
-              <Row gutter={10}>
+              <Row gutter={16}>
                 <Col>
                   <Link href={`/login`}>
                     <UserOutlined /> Log in
@@ -198,9 +201,24 @@ export default function Home() {
                 </Col>
               </Row>
             ) : (
-              <Link href={`/dashboard`}>
-                <BarChartOutlined /> Dashboard
-              </Link>
+              <Row gutter={16}>
+                <Col>
+                  <Link href={`/dashboard`}>
+                    <BarChartOutlined /> Dashboard
+                  </Link>
+                </Col>
+                <Col >
+                  <Button type="link" onClick={async () => {
+                    await setLogout();
+                    localStorage.removeItem("user");
+                    // router.refresh();
+                    window.location.reload();
+                  }}>
+                    <LogoutOutlined /> log out
+                  </Button>
+                </Col>
+              </Row>
+
             )
           }
         </div>
@@ -209,7 +227,7 @@ export default function Home() {
 
       <Content title={"Map"} >
         <APIProvider apiKey={AppConfig.googleMapApiKey} onLoad={() => {
-
+          mapControl?.panTo(mapCenter);
         }}>
 
           <Map
@@ -229,7 +247,12 @@ export default function Home() {
             }>
             <Markers marks={marks} />
           </Map>
-          <EventList events={list} categories={categories}></EventList>
+          <EventList events={list} categories={categories}
+            handleSearch={(values) => {
+              values.content = values.title;
+              fetchData(values);
+            }}
+          ></EventList>
         </APIProvider>
       </Content>
     </Layout>

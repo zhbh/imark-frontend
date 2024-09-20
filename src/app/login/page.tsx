@@ -62,7 +62,18 @@ export default function Login() {
             <Form.Item
               name="password"
               label={<span className={styles.label}>Password</span>}
-              rules={[{ required: true, message: "Please input your password" }]}
+              rules={[
+                { required: true, message: "Please input your password" },
+                ({
+                  validator(_, value) {
+                    var pwdRegex = new RegExp('(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z0-9]).{8,30}');
+                    if (pwdRegex.test(value)) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("Must contain one number, one upper letter, one lower letter and one special character, at least 8 charaters"));
+                  },
+                }),
+              ]}
             >
               <Input.Password placeholder="Please input your password" />
             </Form.Item>

@@ -1,7 +1,7 @@
 import { ValueOf } from "next/dist/shared/lib/constants";
 
 export interface UserType {
-  nickName: string;
+  nickName?: string;
   _id?: string;
   name: string;
   role: USER_ROLE;

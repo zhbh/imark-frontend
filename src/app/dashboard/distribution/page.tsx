@@ -13,7 +13,7 @@ import { Content, GoogleMap, PopUpModal } from "@/components";
 const Option = Select.Option;
 
 export default function Events() {
-    const [form] = Form.useForm();
+    const [searchForm] = Form.useForm();
     const router = useRouter();
     const [list, setList] = useState<EventType[]>([]);
     const [total, setTotal] = useState(0);
@@ -210,9 +210,9 @@ export default function Events() {
             }
         >
             <Form
-                form={form}
+                form={searchForm}
                 name="search"
-                className={styles.form}
+                className={styles.searchForm}
                 style={{ margin: "10px 0 0 10px" }}
                 onFinish={handleSearch}
             >
@@ -251,7 +251,7 @@ export default function Events() {
                             style={{ margin: "0 8px" }}
                             icon={<ClearOutlined />}
                             onClick={() => {
-                                form.resetFields();
+                                searchForm.resetFields();
                                 fetchData();
                             }}
                         >

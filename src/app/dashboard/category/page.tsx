@@ -46,9 +46,9 @@ const COLUMNS = [
     dataIndex: "color",
     key: "color",
     width: 160,
-    render: (color: string) => <ColorPicker
+    render: (value: string) => <ColorPicker
       showText
-      defaultValue={color}
+      value={value}
       disabled
     />
   },
@@ -56,14 +56,14 @@ const COLUMNS = [
     title: "Icon",
     dataIndex: "icon",
     key: "icon",
-    width: 160,
+    width: 100,
     render: (value: string) => <div className={`${value}-icon`}></div>,
   },
   {
     title: "Created Time",
     dataIndex: "createdTime",
     key: "createdTime",
-    width: 200,
+    width: 160,
     render: (text: string) => dayjs(text).format("DD/MM/YYYY"),
   },
 ];
@@ -95,6 +95,8 @@ export default function Category() {
     green,
     cyan,
   });
+
+  const [loading, setLoading] = useState(false);
 
   const columns = [
     ...COLUMNS,
@@ -136,6 +138,7 @@ export default function Category() {
     (search?: CategoryQueryType) => {
       const { name } = search || {};
 
+      setLoading(true);
       request
         .get(
           `/api/category?${qs.stringify({
@@ -147,7 +150,7 @@ export default function Category() {
         .then((res) => {
           setList(res.data);
           setTotal(res.total);
-        });
+        }).finally(() => setLoading(false));
     },
     [pagination]
   );
@@ -158,6 +161,7 @@ export default function Category() {
 
   const handleCategoryFinish = async (values: CategoryType) => {
     values.color = color;
+    values.icon = values.icon ?? "sports";
     console.log("🚀 ~ handleCategoryFinish ~ values:", values)
 
     if (editData._id) {
@@ -168,7 +172,7 @@ export default function Category() {
       message.success("Create the category successfully!");
     }
 
-    fetchData();
+    await fetchData();
     handleCancel();
   };
 
@@ -278,6 +282,7 @@ export default function Category() {
             <Table
               rowKey="_id"
               dataSource={list}
+              loading={loading}
               columns={columns}
               onChange={handleTableChange}
               pagination={{
