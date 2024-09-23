@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { AdvancedMarker, APIProvider, Map, MapCameraChangedEvent, MapMouseEvent, Pin, useMap } from "@vis.gl/react-google-maps";
 import AppConfig from "../../../app.config";
@@ -89,7 +89,7 @@ const GoogleMap: React.FC<
                 className={styles.map}
                 defaultZoom={13}
                 mapId={AppConfig.mapId}
-                center={{ lat: lat, lng: lng }}
+                defaultCenter={{ lat: lat, lng: lng }}
                 onClick={(ev: MapMouseEvent) => {
                     const latValue = ev.detail.latLng?.lat ?? lat;
                     const lngValue = ev.detail.latLng?.lng ?? lng;

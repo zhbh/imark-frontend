@@ -1,0 +1,15 @@
+.form {
+    margin: 5px;
+}
+
+.tableWrap {
+    overflow: auto;
+    height: calc(100% - 80px);
+}
+
+.heartBreak {
+    width: 28px;
+    height: 28px;
+    background: url(../../../../public/images/heart-break.png) no-repeat 50%;
+    background-size: 50%;
+}

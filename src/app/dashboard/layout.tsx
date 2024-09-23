@@ -5,7 +5,7 @@ import type { MenuProps } from "antd";
 import { Layout as AntdLayout, Menu, Dropdown, Space, message, Flex } from "antd";
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
-import { HomeOutlined, UserOutlined, ClusterOutlined, GithubOutlined, MailOutlined, HeartOutlined } from '@ant-design/icons';
+import { HomeOutlined, UserOutlined, ClusterOutlined, GithubOutlined, MailOutlined, HeartOutlined, LogoutOutlined, ProfileOutlined } from '@ant-design/icons';
 import { useCurrentUser } from "@/utils/user_info";
 import Link from "next/link";
 import { setLogout } from "@/api";
@@ -115,10 +115,12 @@ export default function Layout({ children }: {
                         </Link>
                     ),
                     key: 'profile',
+                    icon: <ProfileOutlined />,
                 },
                 {
                     label: 'Log out',
                     key: 'logout',
+                    icon: <LogoutOutlined />,
                     onClick: async () => {
                         await setLogout();
                         localStorage.removeItem("user");

@@ -23,7 +23,7 @@ const EventList: React.FC<
 
   return (
     <>
-      <div style={{ position: "absolute", left: 0, bottom: 0, zIndex: 100, width: "30%", backgroundColor: "#ffffffcc", margin: "10px", padding: "10px", borderRadius: "10px" }}>
+      <div style={{ position: "absolute", left: 0, bottom: 0, zIndex: 100, width: "30%", height: "390px", backgroundColor: "#ffffffcc", margin: "10px", padding: "10px", borderRadius: "10px", overflowY: "auto", }}>
         <Form
           form={searchForm}
           name="search"
@@ -61,14 +61,14 @@ const EventList: React.FC<
           className="listContent"
           size="small"
           dataSource={events}
-          pagination={{ position: "bottom", align: "end" }}
+          pagination={{ position: "bottom", align: "end", size: "small", defaultPageSize: 3 }}
           renderItem={(item, index) => (
             <List.Item onClick={() => {
               const loc = item.location.split(",");
               map?.panTo({ lat: parseFloat(loc[0]), lng: parseFloat(loc[1]) });
             }}>
               <List.Item.Meta
-                avatar={<div className={`${categories.find(category => category._id == item.category)?.icon}-icon`} />}
+                avatar={<div className={`${item.category?.icon}-icon`} />}
                 // key={item._id}
                 title={item.title}
                 description={item.content}

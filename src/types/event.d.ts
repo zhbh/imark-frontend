@@ -1,3 +1,4 @@
+import { CategoryType } from "./category";
 import { UserType } from "./user";
 
 export interface EventType {
@@ -5,7 +6,7 @@ export interface EventType {
     title: string;
     content: string;
     contact: string;
-    category: string;
+    category: CategoryType;
     expirationTime: number;
     dispatchTime: number;
     location: string;

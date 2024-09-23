@@ -1,4 +1,4 @@
-import { EventType } from "@/types";
+import { CategoryType, EventType } from "@/types";
 import request from "@/utils/request";
 import qs from "qs";
 
@@ -7,7 +7,7 @@ export const getEvents = (
         current?: number;
         pageSize?: number;
         all?: boolean;
-        category?: string;
+        category?: CategoryType;
     }
 ) => {
     return request.get(`/api/event?${qs.stringify(params)}`);

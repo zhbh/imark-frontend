@@ -7,4 +7,5 @@ export interface CategoryType {
 
 export interface CategoryQueryType {
   name?: string;
+  category?: string;
 }

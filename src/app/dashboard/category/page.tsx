@@ -19,7 +19,6 @@ import {
   Divider,
   theme,
   Radio,
-  Image
 } from "antd";
 import dayjs from "dayjs";
 import { useCallback, useEffect, useState } from "react";

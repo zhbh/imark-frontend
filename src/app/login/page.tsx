@@ -17,12 +17,11 @@ export default function Login() {
   const handleFinish = async (values: UserLoginType) => {
     try {
       const res = await request.post("/api/login", values);
-      console.log("🚀 ~ handleFinish ~ res:", res)
 
       localStorage.setItem("user", JSON.stringify(res.data));
       message.success("Log in successfully!");
 
-      router.push("/dashboard");
+      router.push("/");
     } catch (error) {
       console.error(error);
     }

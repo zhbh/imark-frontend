@@ -135,7 +135,7 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
           <DatePicker
             showTime={{ format: 'HH:mm' }}
             format="DD/MM/YYYY HH:mm"
-            minDate={dayjs(new Date().toLocaleString(), "DD/MM/YYYY HH:MM")}
+            minDate={dayjs(new Date())}
           />
         </Form.Item>
 

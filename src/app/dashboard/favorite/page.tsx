@@ -1,21 +1,25 @@
 "use client";
 
 import styles from "./page.module.css";
-import { Form, Table, Space, Tag, TableProps, Tooltip, TablePaginationConfig, Modal, message, Button, Row, Col, Input, Select } from "antd";
-import { ExclamationCircleFilled, PlusOutlined, SearchOutlined, ClearOutlined, EditOutlined, DeleteOutlined, AimOutlined } from "@ant-design/icons";
+import { Form, Table, Space, Tag, Tooltip, TablePaginationConfig, Modal, message, Button, Row, Col, Input, Select } from "antd";
+import { HeartOutlined, HeartFilled, SearchOutlined, ClearOutlined, AimOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CategoryType, EventType } from "@/types";
-import { getEvents, deleteEvent, getCategories } from "@/api";
-import { Content, GoogleMap, PopUpModal } from "@/components";
+import { CategoryType, EventType, FavoriteQueryType, FavoriteType } from "@/types";
+import { getCategories } from "@/api";
+import { Content, GoogleMap } from "@/components";
+import { useCurrentUser } from "@/utils/user_info";
+import { deleteFavorite, getFavorites } from "@/api/favorite";
 
 const Option = Select.Option;
 
-export default function Events() {
+export default function Favorites() {
     const [searchForm] = Form.useForm();
     const router = useRouter();
-    const [list, setList] = useState<EventType[]>([]);
+    const user = useCurrentUser();
+
+    const [list, setList] = useState<FavoriteType[]>([]);
     const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState<TablePaginationConfig>({
@@ -34,9 +38,9 @@ export default function Events() {
             dataIndex: "title",
             key: "title",
             width: 120,
-            render: (value: string) => {
-                return <Tooltip title={value} placement="topLeft">
-                    {value}
+            render: (_: any, row: FavoriteType) => {
+                return <Tooltip title={row.event?.title} placement="topLeft">
+                    {row.event?.title}
                 </Tooltip>
             },
         },
@@ -45,10 +49,22 @@ export default function Events() {
             dataIndex: "content",
             key: "content",
             ellipsis: true,
-            width: 200,
-            render: (value: string) => {
-                return <Tooltip title={value} placement="topLeft">
-                    {value}
+            width: 160,
+            render: (_: any, row: FavoriteType) => {
+                return <Tooltip title={row.event?.content} placement="topLeft">
+                    {row.event?.content}
+                </Tooltip>
+            },
+        },
+        {
+            title: "Contact",
+            dataIndex: "contact",
+            key: "contact",
+            ellipsis: true,
+            width: 100,
+            render: (_: any, row: FavoriteType) => {
+                return <Tooltip title={row.event?.contact} placement="topLeft">
+                    {row.event?.contact}
                 </Tooltip>
             },
         },
@@ -58,8 +74,8 @@ export default function Events() {
             key: "category",
             ellipsis: true,
             width: 120,
-            render: (item: CategoryType) =>
-                item != null ? <Tag color="blue">{item.name}</Tag> : "-",
+            render: (_: any, row: FavoriteType) =>
+                row.event?.category != null ? <Tag color="blue">{row.event?.category.name}</Tag> : "-",
         },
         {
             title: "Expiration Time",
@@ -73,7 +89,7 @@ export default function Events() {
             key: "status",
             dataIndex: "expirationTime",
             width: 120,
-            render: (_: any, row: EventType) => dayjs(row.expirationTime).isAfter(dayjs(Date.now())) ? (
+            render: (_: any, row: FavoriteType) => dayjs(row.event?.expirationTime).isAfter(dayjs(Date.now())) ? (
                 <Tag color="green"  >
                     In Progress
                 </Tag >
@@ -83,24 +99,16 @@ export default function Events() {
                 </Tag >
             ),
         },
-        // {
-        //     title: "Dispatch Time",
-        //     dataIndex: "dispatchTime",
-        //     key: "dispatchTime",
-        //     width: 120,
-        //     render: (value: string) => dayjs(value).format("DD/MM/YYYY"),
-        // },
     ];
 
     const fetchData = useCallback(
-        (search?: EventType) => {
-            const { title, content, category } = search || {};
+        (search?: FavoriteQueryType) => {
+            const { title, category } = search || {};
             setLoading(true);
-            getEvents({
+            getFavorites({
                 current: pagination.current as number,
                 pageSize: pagination.pageSize as number,
                 title,
-                content,
                 category,
             }).then((res) => {
                 setLoading(false);
@@ -116,10 +124,6 @@ export default function Events() {
         fetchData();
     }, [fetchData, pagination]);
 
-    const handleEventAdd = () => {
-        router.push("/dashboard/distribution/add");
-    };
-
     useEffect(() => {
         (async function () {
             getCategories().then((res) => {
@@ -128,16 +132,16 @@ export default function Events() {
         })();
     }, []);
 
-    const handleDeleteModal = (data: EventType) => {
+    const handleUnfavoriteModal = (data: FavoriteType) => {
         Modal.confirm({
-            title: `Confirm to delete the event ${data.title}?`,
-            icon: <ExclamationCircleFilled />,
+            title: `Confirm to unfavorite "${data.event.title}"?`,
+            icon: <HeartOutlined />,
             okText: "Confirm",
             cancelText: "Cancel",
             async onOk() {
                 try {
-                    await deleteEvent(data._id as string);
-                    message.success(`Delete the Event ${data.title}`);
+                    await deleteFavorite(data._id as string);
+                    message.success(`Unfavorite "${data.event.title}"`);
                     fetchData();
                 } catch (error) {
                     console.error(error);
@@ -158,7 +162,7 @@ export default function Events() {
         title: "Operations",
         key: "actions",
         dataIndex: "actions",
-        render: (_: any, row: EventType) => (
+        render: (_: any, row: FavoriteType) => (
             <Space size="small" align="center">
                 <Button
                     type="link"
@@ -166,32 +170,22 @@ export default function Events() {
                     icon={<AimOutlined />}
                     onClick={() => {
                         setOpenMap(true);
-                        setLocation(row.location);
-                        setCategory(row.category);
+                        setLocation(row.event?.location);
+                        setCategory(row.event.category);
                     }}
                 >
                     Map
                 </Button>
                 <Button
                     type="link"
-                    block
-                    icon={<EditOutlined />}
-                    onClick={() => {
-                        router.push(`/dashboard/distribution/edit/${row._id}`);
-                    }}
-                >
-                    Edit
-                </Button>
-                <Button
-                    type="link"
                     danger
                     block
-                    icon={<DeleteOutlined />}
+                    icon={<div className={styles.heartBreak}></div>}
                     onClick={() => {
-                        handleDeleteModal(row as EventType);
+                        handleUnfavoriteModal(row as FavoriteType);
                     }}
                 >
-                    Delete
+                    Unfavorite
                 </Button>
             </Space>
         ),
@@ -207,14 +201,9 @@ export default function Events() {
 
     return (
         <Content
-            title="Events"
-            operation={
-                <Button type="primary" size="small" icon={<PlusOutlined />} onClick={handleEventAdd}>
-                    Add Event
-                </Button>
-            }
+            title="Favorites"
         >
-            <Form
+            {/* <Form
                 form={searchForm}
                 name="search"
                 className={styles.searchForm}
@@ -222,15 +211,15 @@ export default function Events() {
                 onFinish={handleSearch}
             >
                 <Row gutter={24}>
-                    <Col span={4}>
-                        <Form.Item name="title" label="Title">
-                            <Input placeholder="Please input" />
+                    <Col span={5}>
+                        <Form.Item name="title">
+                            <Input placeholder="Please search for event's title" allowClear />
                         </Form.Item>
                     </Col>
 
                     <Col span={5}>
-                        <Form.Item name="content" label="Content">
-                            <Input placeholder="Please input" />
+                        <Form.Item name="content">
+                            <Input placeholder="Please search for event's content" allowClear />
                         </Form.Item>
                     </Col>
 
@@ -264,7 +253,7 @@ export default function Events() {
                         </Button>
                     </Col>
                 </Row>
-            </Form>
+            </Form> */}
             <div className={styles.tableWrap}>
                 <Table
                     size="small"

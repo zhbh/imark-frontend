@@ -1,7 +1,7 @@
 "use client";
 
 import { AdvancedMarker, APIProvider, InfoWindow, Map, MapCameraChangedEvent, MapMouseEvent, Pin, useAdvancedMarkerRef, useMap } from "@vis.gl/react-google-maps";
-import { Button, Card, Col, Layout, Row, TablePaginationConfig } from "antd";
+import { Button, Card, Col, ConfigProvider, Form, Input, Layout, Row, TablePaginationConfig } from "antd";
 import AppConfig from "../../app.config";
 import { useCallback, useEffect, useState } from "react";
 import styles from "./page.module.css";
@@ -9,18 +9,18 @@ import "./map.css";
 import Link from "next/link";
 import { Header, Content } from "antd/es/layout/layout";
 import { useCurrentUser } from "@/utils/user_info";
-import { CategoryType, EventType } from "@/types";
+import { CategoryType, EventType, FavoriteType } from "@/types";
 import { getCategories, getEvents, setLogout } from "@/api";
-import { HeartOutlined, UserOutlined, UserAddOutlined, BarChartOutlined, LogoutOutlined } from "@ant-design/icons";
+import { HeartOutlined, UserOutlined, UserAddOutlined, BarChartOutlined, LogoutOutlined, HeartFilled } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import { FacebookIcon, FacebookShareButton, TwitterShareButton, XIcon } from "react-share";
 import { EventList } from "@/components";
+import { addFavorite, deleteFavorite, getFavorite, getFavorites } from "@/api/favorite";
 
 type iMark = { event: EventType, location: google.maps.LatLngLiteral }
 
 export default function Home() {
-  const shareLink = window.location.origin;
   const user = useCurrentUser();
   const router = useRouter();
 
@@ -41,6 +41,7 @@ export default function Home() {
 
   const [marks, setMarks] = useState<iMark[]>([]);
   const [mapCenter, setMapCenter] = useState(defaultCenter);
+  const [favorites, setFavorites] = useState<FavoriteType[]>([]);
 
   const mapControl = useMap("map-id");
 
@@ -51,6 +52,7 @@ export default function Home() {
         const lngValue = position.coords.longitude;
 
         setMapCenter({ lat: latValue, lng: lngValue });
+        mapControl?.panTo(mapCenter);
       }
     );
   }, []);
@@ -89,14 +91,27 @@ export default function Home() {
         setTotal(data.total);
 
       });
-      // .finally(() => setTimeout(fetchData, 10000));
+
+      getFavorites({ all: true }).then((res) => {
+        setFavorites(res.data);
+      });
 
     },
     [pagination]
   );
 
+  const handleFavoriteSubmit = (favorite: FavoriteType) => {
+    if (!user) {
+      router.push("/login");
+    } else {
+      favorite?._id != null ? deleteFavorite(favorite._id!) : addFavorite(favorite);
+    }
+
+    fetchData();
+  }
+
   const buildContent = (event: EventType) => {
-    const category = categories.find(item => item._id === event.category);
+    const category = event.category;
     const categoryIcon = category?.icon;
 
     const content = document.createElement("div");
@@ -114,22 +129,34 @@ export default function Home() {
           const [markerRef, marker] = useAdvancedMarkerRef();
           const [infoWindowShown, setInfoWindowShown] = useState(false);
           const handleMarkerClick = useCallback(
-            () => setInfoWindowShown(isShown => !isShown),
+            () => {
+              setInfoWindowShown(isShown => !isShown);
+            },
             []
           );
           const handleClose = useCallback(() => setInfoWindowShown(false), []);
 
           const actions: React.ReactNode[] = [
-            <FacebookShareButton url={shareLink}>
+            <FacebookShareButton url={window.location.origin}>
               <FacebookIcon size={18} round />
             </FacebookShareButton>,
             <TwitterShareButton
-              url={shareLink}
+              url={window.location.origin}
               title={mark.event.title}
             >
               <XIcon size={18} round />
             </TwitterShareButton>,
-            <HeartOutlined key="favorite" />,
+
+            (favorites.find(item => item.event._id === mark.event._id) != null ? <HeartFilled
+              key="favorite"
+              style={{ color: "red" }}
+              onClick={() => handleFavoriteSubmit({ _id: favorites.find(item => item.event._id === mark.event._id)?._id!, event: mark.event, user: user, },)}
+            /> : <HeartOutlined
+              key="favorite"
+              onClick={() => handleFavoriteSubmit({ event: mark.event, user: user })}
+            />
+            )
+
           ];
 
           return (
@@ -147,7 +174,7 @@ export default function Home() {
               />
               {infoWindowShown && (
                 <InfoWindow anchor={marker} onClose={handleClose}>
-                  <Card actions={actions} style={{ minWidth: 300 }}>
+                  <Card actions={actions} style={{ width: 300 }}>
                     <Card.Meta
                       title={mark.event.title}
                       description={
@@ -201,7 +228,7 @@ export default function Home() {
                 </Col>
               </Row>
             ) : (
-              <Row gutter={16}>
+              <Row gutter={10}>
                 <Col>
                   <Link href={`/dashboard`}>
                     <BarChartOutlined /> Dashboard
@@ -239,9 +266,6 @@ export default function Home() {
             gestureHandling="greedy"
             streetViewControl={false}
             fullscreenControl={false}
-            onClick={(ev: MapMouseEvent) => {
-
-            }}
             onCameraChanged={(ev: MapCameraChangedEvent) =>
               console.log("camera changed:", ev.detail.center, "zoom:", ev.detail.zoom)
             }>
