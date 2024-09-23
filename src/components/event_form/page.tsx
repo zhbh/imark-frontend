@@ -121,7 +121,7 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
           <Select
             placeholder="Please select a category"
             allowClear
-            onChange={value => setCategory(value)}
+            onChange={value => setCategory(categories.find(item => item._id == value))}
           >
             {categories.map((category) => (
               <Option key={category._id} value={category._id}>
@@ -135,7 +135,7 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
           <DatePicker
             showTime={{ format: 'HH:mm' }}
             format="DD/MM/YYYY HH:mm"
-            minDate={dayjs(new Date())}
+            minDate={dayjs()}
           />
         </Form.Item>
 
