@@ -3,7 +3,12 @@ Information Distribution System in front-end side
 
 ## Getting Started
 
-First, run the development server:
+First, install noed modules:
+```bash
+npm install
+```
+
+Second, run the development server:
 
 ```bash
 npm run dev
