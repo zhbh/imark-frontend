@@ -4,7 +4,7 @@ const nextConfig = {
         return [
             {
                 source: `/api/:path*`,
-                destination: `http://localhost:3001/api/:path*`,
+                destination: `https://main.d3r31it7qf5i7h.amplifyapp.com/api/:path*`,
             },
         ]
     },
