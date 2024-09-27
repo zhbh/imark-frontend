@@ -5,7 +5,7 @@ import { Auth, Content } from "@/components";
 import { USER_ROLE, USER_STATUS } from "@/constants";
 import { UserQueryType, UserType } from "@/types";
 import { useCurrentUser } from "@/utils/user_info";
-import { ExclamationCircleFilled, PlusOutlined, SearchOutlined, ClearOutlined, EditOutlined, DeleteOutlined, StopOutlined } from "@ant-design/icons";
+import { ExclamationCircleFilled, PlusOutlined, SearchOutlined, ClearOutlined, EditOutlined, DeleteOutlined, StopOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import {
   Button, Col, Form, Input, Modal, Row, Select, Space, Table, TablePaginationConfig, Tag, message,
 } from "antd";
@@ -89,7 +89,7 @@ export default function Book() {
           <Button
             type="link"
             danger={row.status === USER_STATUS.ON}
-            icon={<StopOutlined />}
+            icon={row.status === USER_STATUS.ON ? <StopOutlined /> : <CheckCircleOutlined />}
             onClick={() => {
               handleUpdateStatus(row);
             }}

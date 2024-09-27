@@ -7,21 +7,21 @@ export const setLogout = async () => {
 };
 
 export const getUserList = (params?: UserQueryType) => {
-  return request.get(`/api/users?${qs.stringify(params)}`);
+  return request.get(`/api/user?${qs.stringify(params)}`);
 };
 
 export const getUserDetail = (id: string) => {
-  return request.get(`/api/users/${id}`);
+  return request.get(`/api/user/${id}`);
 };
 
 export const deleteUser = (id: string) => {
-  return request.delete(`/api/users/${id}`);
+  return request.delete(`/api/user/${id}`);
 };
 
 export const addUser = (params: UserType) => {
-  return request.post("/api/users", params);
+  return request.post("/api/user", params);
 };
 
 export const updateUser = (id: string, params: UserType) => {
-  return request.put(`/api/users/${id}`, params);
+  return request.put(`/api/user/${id}`, params);
 };

@@ -96,13 +96,13 @@ const UserForm: React.FC<UserFormProps> = ({
             name="password"
             rules={[
               {
-                required: true,
+                required: user?.role === USER_ROLE.USER,
                 message: "Please input the password",
               },
               ({
                 validator(_, value) {
                   var pwdRegex = new RegExp('(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^a-zA-Z0-9]).{8,30}');
-                  if (pwdRegex.test(value)) {
+                  if (user?.role != USER_ROLE.USER || pwdRegex.test(value)) {
                     return Promise.resolve();
                   }
                   return Promise.reject(new Error("Must contain one number, one upper letter, one lower letter and one special character, at least 8 charaters"));
@@ -118,12 +118,12 @@ const UserForm: React.FC<UserFormProps> = ({
             label={<span className={styles.label}>Confirm Password</span>}
             rules={[
               {
-                required: true,
+                required: user?.role === USER_ROLE.USER,
                 message: "Please input the confirm password",
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || getFieldValue("password") === value) {
+                  if (user?.role != USER_ROLE.USER || (!value || getFieldValue("password") === value)) {
                     return Promise.resolve();
                   }
                   return Promise.reject(new Error("The new password that you entered do not match!"));
