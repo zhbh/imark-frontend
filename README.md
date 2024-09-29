@@ -69,3 +69,9 @@ npm run dev
 ```
 
 Open [http://localhost:3008](http://localhost:3008) to your browser to view the website.
+
+## Deployment
+
+```bash
+npm run build
+```

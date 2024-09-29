@@ -90,6 +90,7 @@ const GoogleMap: React.FC<
                 defaultZoom={13}
                 mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
                 defaultCenter={{ lat: lat, lng: lng }}
+                center={{ lat: lat, lng: lng }}
                 onClick={(ev: MapMouseEvent) => {
                     const latValue = ev.detail.latLng?.lat ?? lat;
                     const lngValue = ev.detail.latLng?.lng ?? lng;
