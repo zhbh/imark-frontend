@@ -1,9 +1,9 @@
-import Content from "./content/page";
-import EventForm from "./event_form/page";
+import Content from "./content";
+import EventForm from "./event_form";
 import PopUpModal from "./modal";
-import GoogleMap from "./map/page";
-import UserForm from "./user_form/page";
-import Auth from "./auth/page"
-import EventList from "./event_list/page";
+import GoogleMap from "./map";
+import UserForm from "./user_form";
+import Auth from "./auth"
+import EventList from "./event_list";
 
 export { Content, EventForm, PopUpModal, GoogleMap, UserForm, Auth, EventList };
