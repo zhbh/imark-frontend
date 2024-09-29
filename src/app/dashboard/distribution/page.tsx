@@ -1,14 +1,14 @@
 "use client";
 
 import styles from "./page.module.css";
-import { Form, Table, Space, Tag, TableProps, Tooltip, TablePaginationConfig, Modal, message, Button, Row, Col, Input, Select } from "antd";
+import { Form, Table, Space, Tag, Tooltip, TablePaginationConfig, Modal, message, Button, Row, Col, Input, Select } from "antd";
 import { ExclamationCircleFilled, PlusOutlined, SearchOutlined, ClearOutlined, EditOutlined, DeleteOutlined, AimOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CategoryType, EventType } from "@/types";
 import { getEvents, deleteEvent, getCategories } from "@/api";
-import { Content, GoogleMap, PopUpModal } from "@/components";
+import { Content, GoogleMap } from "@/components";
 
 const Option = Select.Option;
 

@@ -2,9 +2,11 @@
 "use client";
 
 import { getEventDetail } from "@/api";
-import { EventForm } from "@/components";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+
+const EventForm = dynamic(() => import("@/components/event_form"), { ssr: false, });
 
 export default function EditEvent() {
   const [data, setData] = useState();
@@ -13,10 +15,7 @@ export default function EditEvent() {
   useEffect(() => {
     (async () => {
       const data = pathname.split("/").pop();
-      console.log("🚀 ~ EditEvent ~ pathname:", data)
-
       const res = await getEventDetail(data as string);
-      console.log("🚀 ~ res:", res)
 
       setData(res.data);
     })();
