@@ -1,7 +1,7 @@
 "use client";
 
-import { AdvancedMarker, APIProvider, InfoWindow, Map, MapCameraChangedEvent, MapMouseEvent, Pin, useAdvancedMarkerRef, useMap } from "@vis.gl/react-google-maps";
-import { Button, Card, Col, ConfigProvider, Form, Input, Layout, Row, TablePaginationConfig } from "antd";
+import { AdvancedMarker, APIProvider, InfoWindow, Map, MapCameraChangedEvent, Pin, useAdvancedMarkerRef } from "@vis.gl/react-google-maps";
+import { Button, Card, Col, Layout, Row, TablePaginationConfig } from "antd";
 import AppConfig from "../../app.config";
 import { useCallback, useEffect, useState } from "react";
 import styles from "./page.module.css";
@@ -69,8 +69,6 @@ export default function Home() {
   const [mapCenter, setMapCenter] = useState(defaultCenter);
   const [favorites, setFavorites] = useState<FavoriteType[]>([]);
 
-  const mapControl = useMap("map-id");
-
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position: GeolocationPosition) => {
@@ -78,7 +76,6 @@ export default function Home() {
         const lngValue = position.coords.longitude;
 
         setMapCenter({ lat: latValue, lng: lngValue });
-        mapControl?.panTo(mapCenter);
       }
     );
   }, []);

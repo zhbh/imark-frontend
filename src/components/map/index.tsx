@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { AdvancedMarker, APIProvider, Map, MapCameraChangedEvent, MapMouseEvent, Pin, useMap } from "@vis.gl/react-google-maps";
+import { AdvancedMarker, APIProvider, Map, MapCameraChangedEvent, MapMouseEvent, Pin } from "@vis.gl/react-google-maps";
 import AppConfig from "../../../app.config";
 import { ButtonProps, Modal } from "antd";
 import { CategoryType } from "@/types";

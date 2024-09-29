@@ -2,11 +2,9 @@
 "use client";
 
 import { getEventDetail } from "@/api";
-import dynamic from "next/dynamic";
+import { EventForm } from "@/components";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-
-const EventForm = dynamic(() => import("@/components/event_form"), { ssr: false, });
 
 export default function EditEvent() {
   const [data, setData] = useState();
