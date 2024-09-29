@@ -38,7 +38,7 @@ iMark – the Map-based Information Distribution System
 ## Configuration
 
 ### Development environment
-Create a file `.env.development` in the root directory, and configure the following environmental variables:
+Create a file `.env.local` in the root directory, and configure the following environment variables:
 - Google Maps Platform
 - Fasebase
 
@@ -53,23 +53,6 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
 NEXT_PUBLIC_FIREBASE_APP_ID=
 NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=
 BACKEND_APIS=`http://localhost:3000/api/:path*`
-```
-### Production environment
-Create a file `.env.production` in the root directory, and configure the following environmental variables:
-- Google Maps Platform
-- Fasebase
-
-```bash
-NEXT_PUBLIC_GOOGLE_MAP_API_KEY=
-NEXT_PUBLIC_GOOGLE_MAP_ID=
-NEXT_PUBLIC_FIREBASE_API_KEY=
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
-NEXT_PUBLIC_FIREBASE_APP_ID=
-NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=
-BACKEND_APIS=
 ```
 
 ## Getting Started
