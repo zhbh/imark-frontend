@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import styles from "./page.module.css";
 import { AdvancedMarker, APIProvider, Map, MapCameraChangedEvent, MapMouseEvent, Pin, useMap } from "@vis.gl/react-google-maps";
 import AppConfig from "../../../app.config";
 import { ButtonProps, Modal } from "antd";
 import { CategoryType } from "@/types";
+
+import styles from "./index.module.css";
 
 type Poi = { key: string, location: google.maps.LatLngLiteral }
 
