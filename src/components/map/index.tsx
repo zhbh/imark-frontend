@@ -1,8 +1,8 @@
 "use client";
 
+import { env } from 'node:process';
 import React, { useEffect, useState } from "react";
 import { AdvancedMarker, APIProvider, Map, MapCameraChangedEvent, MapMouseEvent, Pin } from "@vis.gl/react-google-maps";
-import AppConfig from "../../../app.config";
 import { ButtonProps, Modal } from "antd";
 import { CategoryType } from "@/types";
 
@@ -69,7 +69,7 @@ const GoogleMap: React.FC<
         }
     }, [latlng]);
 
-    return <APIProvider apiKey={AppConfig.googleMapApiKey} onLoad={() => {
+    return <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY || ''} onLoad={() => {
     }}>
         <Modal
             title={title}
@@ -88,7 +88,7 @@ const GoogleMap: React.FC<
                 id={"map-modal"}
                 className={styles.map}
                 defaultZoom={13}
-                mapId={AppConfig.mapId}
+                mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
                 defaultCenter={{ lat: lat, lng: lng }}
                 onClick={(ev: MapMouseEvent) => {
                     const latValue = ev.detail.latLng?.lat ?? lat;

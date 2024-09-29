@@ -1,5 +1,76 @@
 # iMark
-Information Distribution System in front-end side
+iMark – the Map-based Information Distribution System
+
+- You post an event based on the location, and this event is displayed on the map.
+- There are many topics (categories) you interested, like marketplace, jobs, rental market and sports and so on.
+- You can search related events to view, and share and favourite them.
+
+## Features
+- Information distribution management
+    - Post an event
+    - Update an event
+    - Delete an event
+    - Query events
+- Category management
+    - Create a category
+    - Edit a category
+    - Delete a category
+    - Search categories
+- User management
+    - Add a user
+    - Change the password
+    - Block a user
+    - Delete a user
+    - Change a role
+    - Update a profile
+- Favorite management
+    - Follow an event
+    - Unfollow an event
+- Map interaction
+    - View all events
+    - Locate an event on the map
+    - Share an event to social media
+    - Favorite an event
+- Log in
+- Log out
+- Sign up
+
+## Configuration
+
+### Development environment
+Create a file `.env.development` in the root directory, and configure the following environmental variables:
+- Google Maps Platform
+- Fasebase
+
+```bash
+NEXT_PUBLIC_GOOGLE_MAP_API_KEY=
+NEXT_PUBLIC_GOOGLE_MAP_ID=
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=
+BACKEND_APIS=`http://localhost:3000/api/:path*`
+```
+### Production environment
+Create a file `.env.production` in the root directory, and configure the following environmental variables:
+- Google Maps Platform
+- Fasebase
+
+```bash
+NEXT_PUBLIC_GOOGLE_MAP_API_KEY=
+NEXT_PUBLIC_GOOGLE_MAP_ID=
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=
+BACKEND_APIS=
+```
 
 ## Getting Started
 
@@ -20,19 +91,4 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-
-## Developing
-Some pages have been implemented in development. There lists pages that can be browsered.
-
-### Dashboard Page
-http://localhost:3000/dashboard
-
-### Dashboard Events List
-http://localhost:3000/dashboard/distribution
-
-### Dashboard Add Event
-http://localhost:3000/dashboard/distribution/add
+Open [http://localhost:3008](http://localhost:3008) with your browser to see the result.

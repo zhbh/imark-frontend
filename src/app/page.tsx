@@ -2,7 +2,6 @@
 
 import { AdvancedMarker, APIProvider, InfoWindow, Map, MapCameraChangedEvent, Pin, useAdvancedMarkerRef } from "@vis.gl/react-google-maps";
 import { Button, Card, Col, Layout, Row, TablePaginationConfig } from "antd";
-import AppConfig from "../../app.config";
 import { useCallback, useEffect, useState } from "react";
 import styles from "./page.module.css";
 import "./map.css";
@@ -27,13 +26,13 @@ isSupported().then((supported) => {
   if (supported) {
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
-      apiKey: "AIzaSyCMX5EcxVpKRJyk-Yae7Q2P6Xescm77H3w",
-      authDomain: "imark-a9cac.firebaseapp.com",
-      projectId: "imark-a9cac",
-      storageBucket: "imark-a9cac.appspot.com",
-      messagingSenderId: "958837165257",
-      appId: "1:958837165257:web:bacb7cf1ab90175239d118",
-      measurementId: "G-VXZGTYNS92"
+      apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+      authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+      storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+      appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+      measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
     };
 
     const app = initializeApp(firebaseConfig);
@@ -276,13 +275,13 @@ export default function Home() {
       </Header>
 
       <Content title={"Map"} >
-        <APIProvider apiKey={AppConfig.googleMapApiKey}>
+        <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY || ''}>
 
           <Map
             className={styles.map}
             defaultZoom={13}
             id={"map-id"}
-            mapId={AppConfig.mapId}
+            mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
             defaultCenter={mapCenter}
             gestureHandling="greedy"
             streetViewControl={false}
