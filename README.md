@@ -74,4 +74,4 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3008](http://localhost:3008) with your browser to see the result.
+Open [http://localhost:3008](http://localhost:3008) to your browser to view the website.
