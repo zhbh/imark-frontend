@@ -1,11 +1,8 @@
 "use client";
 
-import { useCurrentUser } from "@/utils/user_info";
 import { message as AntdMessage } from "antd";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { redirect } from "next/navigation";
-
-// export const baseUrl = location.protocol + '//localhost';
 
 interface AxiosInstanceType extends AxiosInstance {
   get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;

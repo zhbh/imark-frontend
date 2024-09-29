@@ -27,7 +27,6 @@ const GoogleMap: React.FC<
     const [lng, setLng] = useState(0);
     const [locations, setLocations] = useState<Poi[]>([]);
     const [selectedLocation, setSelectedLocation] = useState("");
-    const map = useMap("map-modal");
 
     const buildContent = (category?: CategoryType) => {
         const content = document.createElement("div");

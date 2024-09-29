@@ -19,24 +19,30 @@ import { EventList } from "@/components";
 import { addFavorite, deleteFavorite, getFavorite, getFavorites } from "@/api/favorite";
 
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, isSupported } from "firebase/analytics";
 import { getPerformance } from "firebase/performance";
 
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCMX5EcxVpKRJyk-Yae7Q2P6Xescm77H3w",
-  authDomain: "imark-a9cac.firebaseapp.com",
-  projectId: "imark-a9cac",
-  storageBucket: "imark-a9cac.appspot.com",
-  messagingSenderId: "958837165257",
-  appId: "1:958837165257:web:bacb7cf1ab90175239d118",
-  measurementId: "G-VXZGTYNS92"
-};
-
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const perf = getPerformance(app);
+isSupported().then((supported) => {
+  if (supported) {
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyCMX5EcxVpKRJyk-Yae7Q2P6Xescm77H3w",
+      authDomain: "imark-a9cac.firebaseapp.com",
+      projectId: "imark-a9cac",
+      storageBucket: "imark-a9cac.appspot.com",
+      messagingSenderId: "958837165257",
+      appId: "1:958837165257:web:bacb7cf1ab90175239d118",
+      measurementId: "G-VXZGTYNS92"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const perf = getPerformance(app);
+  } else {
+    console.log("Firebase Analytics is not supported in this environment.");
+  }
+});
 
 type iMark = { event: EventType, location: google.maps.LatLngLiteral }
 
@@ -273,9 +279,7 @@ export default function Home() {
       </Header>
 
       <Content title={"Map"} >
-        <APIProvider apiKey={AppConfig.googleMapApiKey} onLoad={() => {
-          mapControl?.panTo(mapCenter);
-        }}>
+        <APIProvider apiKey={AppConfig.googleMapApiKey}>
 
           <Map
             className={styles.map}
