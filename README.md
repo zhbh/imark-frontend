@@ -52,12 +52,12 @@ NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
 NEXT_PUBLIC_FIREBASE_APP_ID=
 NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=
-BACKEND_APIS=`http://localhost:3000/api/:path*`
+BACKEND_APIS=http://localhost:3000/api/:path*
 ```
 
 ## Getting Started
 
-First, install noed modules:
+First, install node modules:
 ```bash
 npm install
 ```
@@ -68,9 +68,12 @@ Second, run the development server:
 npm run dev
 ```
 
-Open [http://localhost:3008](http://localhost:3008) to your browser to view the website.
+Open [http://localhost:3008](http://localhost:3008) to your browser to view the application.
 
 ## Deployment
+
+Utilze the following command to deploy to the production environment.
+The codebase is deployed to AWS Amplify, which is https://main.d1wt4ve9frisen.amplifyapp.com/.
 
 ```bash
 npm run build
