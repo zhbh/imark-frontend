@@ -55,7 +55,7 @@ NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=
 BACKEND_APIS=http://localhost:3000/api/:path*
 ```
 
-## Getting Started
+## Launch application in local server
 
 First, install node modules:
 ```bash
