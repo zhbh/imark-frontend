@@ -222,7 +222,7 @@ export default function Home() {
   }, [fetchData, pagination]);
 
   return (
-    <Layout>
+    <Layout style={{ minWidth: "470px" }}>
       <Header style={{
         position: "sticky",
         top: 0,

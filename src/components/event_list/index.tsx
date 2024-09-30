@@ -23,7 +23,7 @@ const EventList: React.FC<
 
   return (
     <>
-      <div style={{ position: "absolute", left: 0, bottom: 0, zIndex: 100, width: "30%", height: "390px", backgroundColor: "#ffffffcc", margin: "10px", padding: "10px", borderRadius: "10px", overflowY: "auto", }}>
+      <div style={{ position: "absolute", left: 0, bottom: 0, zIndex: 100, width: "30%", minWidth:"300px", height: "390px", backgroundColor: "#ffffffcc", margin: "10px", padding: "10px", borderRadius: "10px", overflowY: "auto", }}>
         <Form
           form={searchForm}
           name="search"

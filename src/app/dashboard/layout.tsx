@@ -153,7 +153,7 @@ export default function Layout({ children }: {
     }, [user]);
 
     return (
-        <AntdLayout>
+        <AntdLayout style={{ minWidth: "900px" }}>
             <Header className={styles.header} style={{
                 display: "inline",
                 backgroundColor: "white"
