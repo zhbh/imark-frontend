@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { AimOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Flex, Form, Input, message, Modal, Select, } from 'antd';
+import { Button, DatePicker, Flex, Form, Input, message, Select, } from 'antd';
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
 import { CategoryType, EventFormType, EventType } from '@/types';
@@ -148,6 +148,8 @@ const EventForm: React.FC<EventFormType> = ({ title, editData }) => {
         </Form.Item>
 
         <GoogleMap
+          isEdit={true}
+          title="Select a location"
           open={openMap}
           latlng={location}
           onOk={handleOk}
