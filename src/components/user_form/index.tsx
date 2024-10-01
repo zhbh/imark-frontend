@@ -134,12 +134,12 @@ const UserForm: React.FC<UserFormProps> = ({
             <Input.Password placeholder="Please input your password" />
           </Form.Item>
 
-          <Form.Item label="Gender" name="sex">
+          {/* <Form.Item label="Gender" name="sex">
             <Radio.Group>
               <Radio value="male">Male</Radio>
               <Radio value="female">Female</Radio>
             </Radio.Group>
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item label="Status" name="status" hidden={user?.role === USER_ROLE.USER}>
             <Radio.Group disabled={user?.role === USER_ROLE.USER}>

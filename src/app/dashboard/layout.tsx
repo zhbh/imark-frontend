@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import type { MenuProps } from "antd";
-import { Layout as AntdLayout, Menu, Dropdown, Space, message, Flex } from "antd";
+import { Layout as AntdLayout, Menu } from "antd";
 import styles from "./page.module.css";
 import { useRouter } from "next/navigation";
 import { HomeOutlined, UserOutlined, ClusterOutlined, GithubOutlined, MailOutlined, HeartOutlined, LogoutOutlined, ProfileOutlined } from '@ant-design/icons';
@@ -11,7 +11,7 @@ import Link from "next/link";
 import { setLogout } from "@/api";
 import { USER_ROLE } from "@/constants";
 
-const { Header, Content, Footer, Sider } = AntdLayout;
+const { Header, Content, Sider } = AntdLayout;
 
 const LEFT_SIDE_MENUS = [
     {

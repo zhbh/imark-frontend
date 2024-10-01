@@ -108,25 +108,6 @@ export default function Register() {
               <Input.Password placeholder="Please input your password" />
             </Form.Item>
 
-            <Form.Item label="Gender" name="sex">
-              <Radio.Group defaultValue="male">
-                <Radio value="male">Male</Radio>
-                <Radio value="female">Female</Radio>
-              </Radio.Group>
-            </Form.Item>
-
-            <Form.Item label="Status" name="status" hidden>
-              <Radio.Group defaultValue="on">
-                <Radio value="on">Activate</Radio>
-              </Radio.Group>
-            </Form.Item>
-
-            <Form.Item label="Role" name="role" hidden>
-              <Radio.Group defaultValue="User">
-                <Radio value="user">User</Radio>
-              </Radio.Group>
-            </Form.Item>
-
             <Form.Item>
               <Button
                 type="primary"
